@@ -10,13 +10,13 @@ namespace musicly.Models
     public class InstrumentOrder
     {
         #region PROPS
-        [Key]
+        public int InstrumentOrderID { get; set; }
+
         [ForeignKey("Order")]
         [Column(Order = 1)]
         public int OrderId { get; set; }
         public Order Order { get; set; }
 
-        [Key]
         [ForeignKey("Instrument")]
         [Column(Order = 2)]
         public int InstrumentId { get; set; }
