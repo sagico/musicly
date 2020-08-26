@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
+using musicly.Data;
 
 namespace musicly
 {
@@ -33,6 +35,9 @@ namespace musicly
 
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            services.AddDbContext<musiclyContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("musiclyContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
