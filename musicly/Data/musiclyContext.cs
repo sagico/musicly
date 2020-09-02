@@ -15,5 +15,9 @@ namespace musicly.Data
         }
 
         public DbSet<musicly.Models.User> User { get; set; }
+
+        public DbSet<musicly.Models.InstrumentType> InstrumentType { get; set; }
+
+        public DbSet<musicly.Models.Instrument> Instrument { get; set; }
     }
 }
