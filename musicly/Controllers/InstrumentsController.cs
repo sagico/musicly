@@ -20,10 +20,17 @@ namespace musicly.Controllers
         }
 
         // GET: Instruments
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString)
         {
             var musiclyContext = _context.Instrument.Include(i => i.InstrumentType);
-            return View(await musiclyContext.ToListAsync());
+            var instruments = from i in musiclyContext select i;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                instruments = instruments.Where(i => i.Name.Contains(searchString));
+            }
+
+            return View(await instruments.ToListAsync());
         }
 
         // GET: Instruments/Details/5
