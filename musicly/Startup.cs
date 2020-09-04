@@ -33,6 +33,7 @@ namespace musicly
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            //services.AddSession(s => s.IdleTimeout = TimeSpan.FromMinutes(30));
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
@@ -56,6 +57,7 @@ namespace musicly
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
+            //app.UseSession();
 
             app.UseMvc(routes =>
             {

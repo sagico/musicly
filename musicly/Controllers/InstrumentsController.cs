@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -11,22 +10,30 @@ using musicly.Models;
 
 namespace musicly.Controllers
 {
-    public class UsersController : Controller
+    public class InstrumentsController : Controller
     {
         private readonly musiclyContext _context;
 
-        public UsersController(musiclyContext context)
+        public InstrumentsController(musiclyContext context)
         {
             _context = context;
         }
 
-        // GET: Users
-        public async Task<IActionResult> Index()
+        // GET: Instruments
+        public async Task<IActionResult> Index(string searchString)
         {
-            return View(await _context.User.ToListAsync());
+            var musiclyContext = _context.Instrument.Include(i => i.InstrumentType);
+            var instruments = from i in musiclyContext select i;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                instruments = instruments.Where(i => i.Name.Contains(searchString));
+            }
+
+            return View(await instruments.ToListAsync());
         }
 
-        // GET: Users/Details/5
+        // GET: Instruments/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -34,40 +41,42 @@ namespace musicly.Controllers
                 return NotFound();
             }
 
-            var user = await _context.User
+            var instrument = await _context.Instrument
+                .Include(i => i.InstrumentType)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (user == null)
+            if (instrument == null)
             {
                 return NotFound();
             }
 
-            return View(user);
+            return View(instrument);
         }
 
-        // GET: Users/Create
+        // GET: Instruments/Create
         public IActionResult Create()
         {
+            ViewData["TypeID"] = new SelectList(_context.InstrumentType, "Id", "Id");
             return View();
         }
 
-        // POST: Users/Create
+        // POST: Instruments/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize]
-        public async Task<IActionResult> Create([Bind("Id,UserName,Password,FirstName,LastName,BirthDate,City,IsAdmin")] User user)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,Price,ImagePath,TypeID")] Instrument instrument)
         {
             if (ModelState.IsValid)
-            {                
-                _context.Add(user);
+            {
+                _context.Add(instrument);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(user);
+            ViewData["TypeID"] = new SelectList(_context.InstrumentType, "Id", "Id", instrument.TypeID);
+            return View(instrument);
         }
 
-        // GET: Users/Edit/5
+        // GET: Instruments/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -75,22 +84,23 @@ namespace musicly.Controllers
                 return NotFound();
             }
 
-            var user = await _context.User.FindAsync(id);
-            if (user == null)
+            var instrument = await _context.Instrument.FindAsync(id);
+            if (instrument == null)
             {
                 return NotFound();
             }
-            return View(user);
+            ViewData["TypeID"] = new SelectList(_context.InstrumentType, "Id", "Id", instrument.TypeID);
+            return View(instrument);
         }
 
-        // POST: Users/Edit/5
+        // POST: Instruments/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,UserName,Password,FirstName,LastName,BirthDate,City,IsAdmin")] User user)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Price,ImagePath,TypeID")] Instrument instrument)
         {
-            if (id != user.Id)
+            if (id != instrument.Id)
             {
                 return NotFound();
             }
@@ -99,12 +109,12 @@ namespace musicly.Controllers
             {
                 try
                 {
-                    _context.Update(user);
+                    _context.Update(instrument);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!UserExists(user.Id))
+                    if (!InstrumentExists(instrument.Id))
                     {
                         return NotFound();
                     }
@@ -115,10 +125,11 @@ namespace musicly.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(user);
+            ViewData["TypeID"] = new SelectList(_context.InstrumentType, "Id", "Id", instrument.TypeID);
+            return View(instrument);
         }
 
-        // GET: Users/Delete/5
+        // GET: Instruments/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -126,30 +137,31 @@ namespace musicly.Controllers
                 return NotFound();
             }
 
-            var user = await _context.User
+            var instrument = await _context.Instrument
+                .Include(i => i.InstrumentType)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (user == null)
+            if (instrument == null)
             {
                 return NotFound();
             }
 
-            return View(user);
+            return View(instrument);
         }
 
-        // POST: Users/Delete/5
+        // POST: Instruments/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var user = await _context.User.FindAsync(id);
-            _context.User.Remove(user);
+            var instrument = await _context.Instrument.FindAsync(id);
+            _context.Instrument.Remove(instrument);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool UserExists(int id)
+        private bool InstrumentExists(int id)
         {
-            return _context.User.Any(e => e.Id == id);
+            return _context.Instrument.Any(e => e.Id == id);
         }
     }
 }
