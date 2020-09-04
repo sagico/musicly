@@ -20,10 +20,17 @@ namespace musicly.Controllers
         }
 
         // GET: InstrumentOrders
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? searchId)
         {
             var musiclyContext = _context.InstrumentOrder.Include(i => i.Instrument).Include(i => i.Order);
-            return View(await musiclyContext.ToListAsync());
+            var orders = from i in musiclyContext select i;
+
+            if (searchId != null)
+            {
+                orders = orders.Where(i => i.InstrumentOrderID == searchId);
+            }
+
+            return View(await orders.ToListAsync());
         }
 
         // GET: InstrumentOrders/Details/5
