@@ -22,8 +22,7 @@ namespace musicly.Controllers
         // GET: Instruments
         public async Task<IActionResult> Index(string searchString)
         {
-            var musiclyContext = _context.Instrument.Include(i => i.InstrumentType);
-            var instruments = from i in musiclyContext select i;
+            var instruments = from i in _context.Instrument select i;
 
             if (!String.IsNullOrEmpty(searchString))
             {

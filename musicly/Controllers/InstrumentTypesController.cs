@@ -20,9 +20,16 @@ namespace musicly.Controllers
         }
 
         // GET: InstrumentTypes
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString)
         {
-            return View(await _context.InstrumentType.ToListAsync());
+            var instrumentTypes = from i in _context.InstrumentType select i;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                instrumentTypes = instrumentTypes.Where(i => i.Name.Contains(searchString));
+            }
+
+            return View(await instrumentTypes.ToListAsync());
         }
 
         // GET: InstrumentTypes/Details/5
