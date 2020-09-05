@@ -29,7 +29,7 @@ namespace musicly.Controllers
             if (ModelState.IsValid)
             {
                 User existUser = _context.User.SingleOrDefault(User => User.UserName == user.UserName);
-                if (existUser != null)
+                if (existUser == null)
                 {
                     user.IsAdmin = false;
                     _context.Add(user);
