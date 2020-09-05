@@ -10,6 +10,8 @@
 
   <ItemGroup>
     <None Include="Views\Instruments\InstrumentsList.cshtml" />
+    <None Include="wwwroot\css\about.css" />
+    <None Include="wwwroot\js\about.js" />
   </ItemGroup>
 
   <ItemGroup>

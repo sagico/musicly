@@ -33,7 +33,8 @@ namespace musicly
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-
+            
+            services.AddSession();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddDbContext<musiclyContext>(options =>
@@ -56,6 +57,7 @@ namespace musicly
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
+            app.UseSession();
 
             app.UseMvc(routes =>
             {

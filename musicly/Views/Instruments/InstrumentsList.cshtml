@@ -6,7 +6,6 @@
         left:0;
         right: 0;
         width: 100%;
-        margin-top:40px;
         max-width:100% !important;
     }
 
@@ -32,13 +31,14 @@
     }
 
     .instrumentImage {
-        width: 100%;
+        max-width: 100%;
         margin-top:5px;
-        height: 75%;
+        max-height:70%;
+        min-height:70%;
     }
 
     .instrumentName {
-        margin-top: -60px;
+        margin-top: -30px;
         font-size:35px;
     }
     .instrumentDescription {
@@ -148,7 +148,8 @@
                 instrumentCard.className = "instrumentCard col-xs-6 col-sm-4 col-md-3 col-lg-5ths";
                 var instrumentImg = document.createElement("img");
                 instrumentImg.className = "instrumentImage";
-                instrumentImg.setAttribute("src", instrument.imagePath)
+                //console.log()
+                instrumentImg.setAttribute("src", '/Images/' + instrument.imagePath)
                 var instrumentName = document.createElement("div");
                 instrumentName.className = "instrumentName";
                 instrumentName.innerHTML = instrument.name;
