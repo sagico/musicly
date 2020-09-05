@@ -3,6 +3,8 @@
 }
 <link rel="stylesheet" href="~/css/about.css">
 
+<div id="fb-root"></div>
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v8.0" nonce="wYG7PNyA"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 <h2>@ViewData["Title"]</h2>
@@ -20,9 +22,9 @@
     <section>
         <aside>
             <p>
-                Please visit our facebook page.<a href="https://www.facebook.com/musiclyofficial" class="fa fa-facebook" target="_blank"></a>
+                Please visit our facebook page.<a href="https://www.facebook.com/Musicly-108669654304902" class="fa fa-facebook" target="_blank"></a>
 
-                <div class="fb-share-button" style="display:block" data-href="https://www.facebook.com/musiclyofficial" data-layout="button_count" data-size="large" data-mobile-iframe="true"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fwww.facebook.com%2FSabrasme&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Share</a></div>
+                <div class="fb-share-button" style="display:block" data-href="https://www.facebook.com/Musicly-108669654304902" data-layout="button_count" data-size="large" data-mobile-iframe="true"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fwww.facebook.com%2FSabrasme&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Share</a></div>
                 <svg id="barChart"></svg>
 
             </p>
@@ -81,7 +83,7 @@
                 // The map, centered at Uluru
                 var map = new google.maps.Map(
                     document.getElementById('map'), { zoom: 11, center: uluru });
-                
+
                 // The marker, positioned at Uluru
                 $.each(data, function (i, item) {
                     let location = { lat: item.lat, lng: item.lng };
