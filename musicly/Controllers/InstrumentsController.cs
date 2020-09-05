@@ -26,6 +26,21 @@ namespace musicly.Controllers
             return View(await musiclyContext.ToListAsync());
         }
 
+        // GET: Instruments/list
+        [Route("Instruments/list")]
+        public IActionResult getInstruments()
+        {
+            var musiclyContext = _context.Instrument.Include(i => i.InstrumentType);
+            return Ok(musiclyContext);
+        }
+
+        // GET: Instruments/list
+        public async Task<IActionResult> InstrumentsList()
+        {
+            return View();
+        }
+
+
         // GET: Instruments/Details/5
         public async Task<IActionResult> Details(int? id)
         {
