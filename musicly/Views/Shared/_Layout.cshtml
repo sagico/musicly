@@ -34,19 +34,21 @@
                     <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
 
-                    @if (Context.Session.GetString("UserName") != null)
+                    @if (Context.Session.GetString("UserName") != null &&
+                         Context.Session.GetInt32("Admin") != 1)
                     {
                         <li><a asp-area="" asp-controller="Instruments" asp-action="Index">Instruments</a></li>
                         <li class="logout">@Html.ActionLink("Logout", "Logout", "Login")</li>
                     }
-                    else if (Context.Session.GetInt32("Admin") == 1)
+                    @if (Context.Session.GetInt32("Admin") == 1)
                     {
                         <li><a asp-area="" asp-controller="Users" asp-action="Index">Users</a></li>
                         <li><a asp-area="" asp-controller="InstrumentTypes" asp-action="Index">Instrument Types</a></li>
                         <li><a asp-area="" asp-controller="InstrumentOrders" asp-action="Index">Orders</a></li>
+                        <li><a asp-area="" asp-controller="Instruments" asp-action="Index">Instruments</a></li>
                         <li class="logout">@Html.ActionLink("Logout", "Logout", "Login")</li>
                     }
-                    else
+                    else if (Context.Session.GetString("UserName") == null)
                     {
                         <li>@Html.ActionLink("Register", "Index", "Register")</li>
                         <li>@Html.ActionLink("Login", "Index", "Login")</li>
@@ -58,20 +60,25 @@
 
     <partial name="_CookieConsentPartial" />
 
-<div class="container body-content">
-    <br/>
-    @if (Context.Session.GetString("UserName") != null &&
-         Context.Session.GetString("FirstName") != null)
-    {
-        <h1 class="display-4">Welcome, @Context.Session.GetString("FirstName")</h1>
-    }
+    <div class="container body-content">
+        <br />
+        @if (Context.Session.GetString("UserName") != null &&
+           Context.Session.GetString("FirstName") != null &&
+           Context.Session.GetInt32("Admin") != 1)
+        {
+            <h1 class="display-4">Welcome, @Context.Session.GetString("FirstName")</h1>
+        }
+        else if (Context.Session.GetInt32("Admin") == 1)
+        {
+            <h1 class="display-4">Welcome, Admin</h1>
+        }
 
-    @RenderBody()
-    <hr/>
-    <footer>
-        <p>&copy; 2020 - musicly</p>
-    </footer>
-</div>
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; 2020 - musicly</p>
+        </footer>
+    </div>
 
     <environment include="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>

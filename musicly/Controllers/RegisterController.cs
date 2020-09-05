@@ -34,7 +34,7 @@ namespace musicly.Controllers
                     user.IsAdmin = false;
                     _context.Add(user);
                     await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
+                    return Redirect("/Login/");
                 }
 
                 ViewBag.ErrorMsg = "User Already Exist!";
