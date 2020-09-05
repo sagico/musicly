@@ -33,6 +33,13 @@ namespace musicly.Controllers
             return View(await orders.ToListAsync());
         }
 
+        // GET: InstrumentOrdersController/Cart
+        [Route("InstrumentOrdersController/Cart")]
+        public async Task<IActionResult> Cart(int? searchId)
+        {
+            return View();
+        }
+
         // GET: InstrumentOrders/Details/5
         public async Task<IActionResult> Details(int? id)
         {

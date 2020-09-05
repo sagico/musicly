@@ -1,0 +1,125 @@
+﻿
+@{
+    ViewData["Title"] = "Cart";
+}
+<style>
+    .removeBtn{
+
+    }
+
+</style>
+
+<table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">Instrument</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Price For One</th>
+            <th scope="col">Total Price</th>
+            <th scope="col">Remove</th>
+        </tr>
+    </thead>
+    <tbody id="cartItems">
+   
+    </tbody>
+</table>
+<label>Total Cart Price:</label><label id="totalCartPrice"></label>
+<br/>
+<button id="completeOrder" class="btn btn-success">Complete Order</button>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script>
+    $(document).ready(async () => {
+        if (sessionStorage.cart == undefined) {
+            sessionStorage.cart = JSON.stringify([]);
+        }
+        var allInstruments = await getAllInstruments();
+        var cartDetails = [];
+        var cart = JSON.parse(sessionStorage.cart);
+        for (cartItem of cart) {
+            for (instrument of allInstruments) {
+                if (cartItem.id == instrument.id) {
+                    cartDetails.push({ id: instrument.id, name: instrument.name, price: instrument.price, quantity: cartItem.quantity })
+                }
+            }
+        }
+        renderCartDetails(cartDetails);
+        calculateCartPrice(cartDetails);
+
+        $('.removeBtn').on('click', (event) => {
+            var target = event.target;
+            var instrumentId = target.getAttribute('instrumentId');
+            var index = 0;
+            for (cartItem of cartDetails) {
+                if (cartItem.id == instrumentId) {
+                    cartDetails = cartDetails.filter(item => item.id != instrumentId);
+                    cart = cart.filter(item => item.id != instrumentId);
+                    sessionStorage.cart = JSON.stringify(cart);
+                    $("#cartItems").empty();
+                    renderCartDetails(cartDetails);
+                }
+                index++;
+            }
+            calculateCartPrice(cartDetails);
+        });
+
+        $('#completeOrder').on('click', (event) => {
+            var finalCart = {
+                items: JSON.parse(sessionStorage.cart),
+                date: new Date()
+            };
+            // TODO: send to controller api req
+        });
+
+    })
+    const getAllInstruments = async () => {
+        return await $.ajax({
+            url: "/Instruments/list",
+            success: function (instruments, status, xhr) {
+                return instruments;
+            },
+            error: function (xhr, status, err) {
+                console.log("fail");
+                return [];
+            }
+        })
+    }
+
+    const renderCartDetails = (cartDetails) => {
+        for (cartItem of cartDetails) {
+            var cartItemRow = document.createElement("tr");
+            var itemName = document.createElement("td");
+            itemName.appendChild(document.createTextNode(cartItem.name));
+            var itemPrice = document.createElement("td");
+            itemPrice.appendChild(document.createTextNode(cartItem.price));
+            var itemQuantity = document.createElement("td");
+            itemQuantity.appendChild(document.createTextNode(cartItem.quantity));
+            var itemsTotalPrice = document.createElement("td");
+            itemsTotalPrice.appendChild(document.createTextNode(cartItem.quantity * cartItem.price));
+            var removeItem = document.createElement("td");
+            var removeBtn = document.createElement("button");
+            removeBtn.innerHTML = 'X';
+            removeBtn.className = "removeBtn";
+            removeBtn.setAttribute('instrumentId', cartItem.id);
+            removeItem.appendChild(removeBtn);
+            cartItemRow.appendChild(itemName);
+            cartItemRow.appendChild(itemPrice);
+            cartItemRow.appendChild(itemQuantity);
+            cartItemRow.appendChild(itemsTotalPrice);
+            cartItemRow.appendChild(removeItem);
+            $('#cartItems').append(cartItemRow);
+        }
+    }
+
+    const calculateCartPrice = (cartDetails) => {
+        var totalCartPrice = 0;
+        for (item of cartDetails) {
+            totalCartPrice += item.price * item.quantity;
+        }
+        $('#totalCartPrice').html(totalCartPrice);
+    }
+
+    const completeOrder = () => {
+        
+    }
+    
+</script>
