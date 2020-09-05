@@ -1,19 +1,10 @@
 ﻿@{
     ViewData["Title"] = "About";
 }
-<style>
-    #canvas-wrap {
-        position: relative;
-    }
+<link rel="stylesheet" href="~/css/about.css">
 
-    #canvas-wrap canvas {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        z-index: 2;
-    }
-</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
 <h2>@ViewData["Title"]</h2>
 <h3>@ViewData["Message"]</h3>
 
@@ -24,69 +15,54 @@
 <div id="about" class="container">
     <div id="fb-root"></div>
     <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="~/js/about.js"></script>
 
-    <script>
-        (function (d, s, id) {
-            var js, fjs = d.getElementsByTagName(s)[0];
-            if (d.getElementById(id)) return;
-            js = d.createElement(s); js.id = id;
-            js.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.2&appId=2210055362615403&autoLogAppEvents=1';
-            fjs.parentNode.insertBefore(js, fjs);
-        }(document, 'script', 'facebook-jssdk'));
-        var data = [1, 2, 3, 4];
-        var w = 500;
-        var h = 100;
+    <section>
+        <aside>
+            <p>
+                Please visit our facebook page.<a href="https://www.facebook.com/musiclyofficial" class="fa fa-facebook" target="_blank"></a>
 
-        var svg = d3.select("#barChart")
-            .attr("width", w)
-            .attr("height", h);
+                <div class="fb-share-button" style="display:block" data-href="https://www.facebook.com/musiclyofficial" data-layout="button_count" data-size="large" data-mobile-iframe="true"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fwww.facebook.com%2FSabrasme&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Share</a></div>
+                <svg id="barChart"></svg>
 
-        svg.selectAll("rect")
-            .data(data)
-            .enter()
-            .append("rect")
-            .attr("x", function (d, i) {
-                return i * 21;  //Bar width of 20 plus 1 for padding
-            })
-            .attr("y", function (d) {
-                return h - d;  //Height minus data value
-            })
-            .attr("width", 20)
-            .attr("height", function (d) {
-                return d;  //Just the data value
-            })
-            .attr("fill", function (d) {
-                return "rgb(0, 0, " + (d * 3) + ")";
-            });
-    </script>
+            </p>
+        </aside>
+        <p>
+            we invite you to stop your life for a couple
+            of minutes and enjoy from a fresh smoothie
+            or fresh juice.
+            All of our fruits are fresh and high quality.
+            Sabras exists 5 years and always tries to
+            give the best service to our customers.
+            All of our fruits grow in Israel
+            (because we are sabras).
+            We located at Through Ramatayim 67,
+            Hod Hasharon,
+        </p>
+    </section>
 
-    we invite you to stop your life for a couple
-    of minutes and enjoy from a fresh smoothie
-    or fresh juice.
-    All of our fruits are fresh and high quality.
-    Sabras exists 5 years and always tries to
-    give the best service to our customers.
-    All of our fruits grow in Israel
-    (because we are sabras).
-    We located at Through Ramatayim 67,
-    Hod Hasharon,
-    Please visit our facebook page.<a href="https://www.facebook.com/musiclyofficial" class="fa fa-facebook" target="_blank"></a>
+    <div class="widget">
+        <div class="left-panel panel">
+            <div class="city">
+                Avg temp in our stores
+            </div>
+            <div class="temp">
+                <span id="temp"></span>&deg;
+                <img src="https://www.accuweather.com/images/weathericons/01.svg" alt="" width="60">
+            </div>
+        </div>
+    </div>
 
-    <div class="fb-share-button" data-href="https://www.facebook.com/musiclyofficial" data-layout="button_count" data-size="large" data-mobile-iframe="true"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fwww.facebook.com%2FSabrasme&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Share</a></div>
-    <svg id="barChart"></svg>
 
 
 
 
     <div id="canvas-wrap">
-        <canvas id="myCanvas" height="800">
+        <canvas id="myCanvas">
         </canvas>
         <div id="map" style="height:800px;">
         </div>
     </div>
-   
-
 
 
     <script>
@@ -94,34 +70,60 @@
         var c = document.getElementById("myCanvas");
         var ctx = c.getContext("2d");
         ctx.beginPath();
-        ctx.arc(145, 98, 55, 0, 25 * Math.PI);
+        ctx.arc(150, 80, 55, 0, 4 * Math.PI);
         ctx.stroke();
 
         //initialize map
         function myMap() {
-            var locations;
+            var locations = [];
             $.get("https://localhost:44304/Stores", function (data) {
-                locations = data;
                 var uluru = { lat: 31.957122, lng: 34.970975 };
-                console.log(locations)
                 // The map, centered at Uluru
                 var map = new google.maps.Map(
                     document.getElementById('map'), { zoom: 11, center: uluru });
+                
                 // The marker, positioned at Uluru
                 $.each(data, function (i, item) {
                     let location = { lat: item.lat, lng: item.lng };
                     var marker = new google.maps.Marker({ position: location, map: map });
                 });
+                getWeather(data);
             });
-
 
             $("#myCanvas").click(function () {
                 $("#myCanvas").hide();
             });
 
         }
+
+        function getWeather(locations) {
+            var sum = 0;
+            console.log(locations)
+            $.each(locations, function (i, item) {
+                var weatherWS_CorsWrapped = 'https://cors-anywhere.herokuapp.com/https://api.openweathermap.org/data/2.5/weather?lat=' + item.lat + '&lon=' + item.lng + '&appid=d4d7a1a00144183b60e1b8f777d932ed&units=metric';
+
+                // GET: Weather info
+                $.ajax({
+                    url: weatherWS_CorsWrapped,
+                    type: "GET",
+                    headers: { 'Access-Control-Allow-Origin': '*' },
+                    success: function (r) {
+                        sum = sum + r.main.temp;
+                        if (i == locations.length - 1) {
+                            $("#temp").text(Math.floor(sum / locations.length));
+                        }
+                    },
+                    error: function (e) {
+                        alert("Could not query weather information")
+                    },
+                    async: false
+                });
+            });
+        }
+
+
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyByfBxIl9_Kz12_97dMtFdVDlbn7zk7dts&callback=myMap"></script>
 
-</div>
 
+</div>

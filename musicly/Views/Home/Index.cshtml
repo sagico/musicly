@@ -1,92 +1,9 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
-
-<style>
-
-    .widget {
-        position: fixed;
-        left: 15px;
-        bottom:40px;
-        padding:20px;
-        background-color: #fcfdfd;
-        border-radius: 15px;
-        box-shadow: 0px 31px 35px -26px #080c21;
-    }
-
-
-    .date {
-        font-size: 14px;
-        font-weight: bold;
-        color: rgba(0,0,0,0.5);
-    }
-
-    .city {
-        font-size: 21px;
-        font-weight: bold;
-        text-transform: uppercase;
-        padding-top: 5px;
-        color: rgba(0,0,0,0.7);
-    }
-
-    .temp {
-        font-size: 71px;
-        color: rgba(0,0,0,0.9);
-        font-weight: 100;
-    }
-
-    .panel {
-        display: inline-block;
-    }
-
-    .right-panel {
-        position: absolute;
-        float: right;
-        top: 0;
-        margin-top: 35px;
-        padding-left: 10px;
-    }
-</style>
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
-<script>
-    function getWeather() {
-        // The coordinates of tel aviv center
-        var lat = 32.079927;
-        var lng = 34.785402;
-        var url = 'https://cors-anywhere.herokuapp.com/https://api.openweathermap.org/data/2.5/weather?lat=' + lat + '&lon=' + lng + '&appid=d4d7a1a00144183b60e1b8f777d932ed&units=metric';
-       
-        // GET: Weather info 
-        $.ajax({
-            url: url,
-            type: "GET",
-            headers: { 'Access-Control-Allow-Origin': '*' },
-            success: function (r) {
-                $("#temp").text(Math.floor(r.main.temp));
-            },
-            error: function (e) {
-                alert("Could not query weather information")
-            }
-        });
-    }
-
-    getWeather();
-</script>
-
 <div>
     <center dir="rtl">
-        <div class="widget">
-            <div class="left-panel panel">
-                <div class="city">
-                    Tel-Aviv
-                </div>
-                <div class="temp">
-                    <img src="https://www.accuweather.com/images/weathericons/01.svg" alt="" width="60">
-                    <span id="temp"></span>&deg;
-                </div>
-            </div>
-        </div>
+       
 
 
         <h3>        דוגמא לכלי הנגינה באתר:</h3>
