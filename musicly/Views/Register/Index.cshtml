@@ -1,11 +1,11 @@
 ﻿@model musicly.Models.User
-
+@ViewBag
 @{
     ViewData["Title"] = "Register";
 }
 
 <h2>New Account</h2>
-
+<h3>@ViewBag.ErrorMsg</h3>
 
 @using (Html.BeginForm())
 {

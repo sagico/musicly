@@ -1,0 +1,31 @@
+﻿@ViewBag
+@{
+    ViewBag.Message = "";
+    ViewData["Title"] = "Login";
+}
+
+<h2>Login - no!!</h2>
+<div class="container login">
+    <div class="intro">
+        <h2>Hello</h2>
+        <h4>Sign in to Musicly or <a href="/Register">create an account</a></h4>
+    </div>
+
+    <form action="/Login/Login" method="post" class="login-details">
+        <div class="input-group input-group-lg">
+            Enter your user name<input type="text" name="userName" placeholder="User Name" class="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm">
+        </div>
+        <div class="input-group input-group-lg">
+            Enter your password<input type="password" name="password" placeholder="Password" class="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm">
+        </div>
+        <div class="input-group input-group-lg">
+            @if (ViewBag.Message != "" && ViewBag.Message != null)
+            {
+            <h4 class="invalid-login">@ViewBag.Message</h4>
+            }
+            <input type="submit" name="submit" value="Login" class="form-control login-button" aria-label="Large" aria-describedby="inputGroup-sizing-sm">
+        </div>
+    </form>
+</div>
+
+

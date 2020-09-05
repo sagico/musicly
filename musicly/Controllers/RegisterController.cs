@@ -28,10 +28,18 @@ namespace musicly.Controllers
         {
             if (ModelState.IsValid)
             {
-                user.IsAdmin = false;
-                _context.Add(user);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                User existUser = _context.User.SingleOrDefault(User => User.UserName == user.UserName);
+                if (existUser != null)
+                {
+                    user.IsAdmin = false;
+                    _context.Add(user);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+
+                ViewBag.ErrorMsg = "User Already Exist!";
+                return View();
+
             }
             return View(user);
         }
