@@ -23,7 +23,7 @@ namespace musicly.Controllers
         // GET: InstrumentTypes
         public async Task<IActionResult> Index(string searchString)
         {
-            Authorize();
+            UserAuthorization();
 
             var instrumentTypes = from i in _context.InstrumentType select i;
 
@@ -38,7 +38,7 @@ namespace musicly.Controllers
         // GET: InstrumentTypes/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            Authorize();
+            UserAuthorization();
 
             if (id == null)
             {
@@ -68,7 +68,7 @@ namespace musicly.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name")] InstrumentType instrumentType)
         {
-            Authorize();
+            AdminAuthorization();
 
             if (ModelState.IsValid)
             {
@@ -82,7 +82,7 @@ namespace musicly.Controllers
         // GET: InstrumentTypes/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            Authorize();
+            AdminAuthorization();
 
             if (id == null)
             {
@@ -104,7 +104,7 @@ namespace musicly.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] InstrumentType instrumentType)
         {
-            Authorize();
+            AdminAuthorization();
 
             if (id != instrumentType.Id)
             {
@@ -137,7 +137,7 @@ namespace musicly.Controllers
         // GET: InstrumentTypes/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            Authorize();
+            AdminAuthorization();
 
             if (id == null)
             {
@@ -159,7 +159,7 @@ namespace musicly.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            Authorize();
+            AdminAuthorization();
 
             var instrumentType = await _context.InstrumentType.FindAsync(id);
             _context.InstrumentType.Remove(instrumentType);
@@ -169,14 +169,20 @@ namespace musicly.Controllers
 
         private bool InstrumentTypeExists(int id)
         {
-            Authorize();
+            UserAuthorization();
 
             return _context.InstrumentType.Any(e => e.Id == id);
         }
 
-        private void Authorize()
+        private void AdminAuthorization()
         {
             if (HttpContext.Session.GetInt32("Admin") == null)
+                throw new UnauthorizedAccessException();
+        }
+
+        private void UserAuthorization()
+        {
+            if (HttpContext.Session.GetInt32("UserId") == null)
                 throw new UnauthorizedAccessException();
         }
     }

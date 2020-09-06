@@ -25,7 +25,7 @@ namespace musicly.Controllers
 
         private void SaveImage(Instrument instrument, IFormFile file)
         {
-            Authorize();
+            AdminAuthorization();
 
             var fileName = Path.Combine(_hostingEnvironment.ContentRootPath + "\\images\\instruments", Path.GetFileName(file.FileName));
             instrument.ImagePath = "/images/apartments/" + file.FileName;
@@ -38,7 +38,7 @@ namespace musicly.Controllers
         [Route("Images/{imageName}")]
         public async Task<IActionResult> getImage(string imageName)
         {
-            Authorize();
+            UserAuthorization();
 
             var image = System.IO.File.OpenRead("./Views/Instruments/Images/" + imageName);
             return File(image, "image/jpg");
@@ -48,7 +48,7 @@ namespace musicly.Controllers
         // GET: Instruments
         public async Task<IActionResult> Index(string searchString)
         {
-            Authorize();
+            UserAuthorization();
             var musiclyContext = _context.Instrument.Include(i => i.InstrumentType);
             var instruments = from i in musiclyContext select i;
 
@@ -64,7 +64,7 @@ namespace musicly.Controllers
         [Route("Instruments/list")]
         public IActionResult getInstruments()
         {
-            Authorize();
+            UserAuthorization();
             var musiclyContext = _context.Instrument.Include(i => i.InstrumentType);
             return Ok(musiclyContext);
         }
@@ -72,7 +72,7 @@ namespace musicly.Controllers
         // GET: Instruments/list
         public async Task<IActionResult> InstrumentsList()
         {
-            Authorize();
+            UserAuthorization();
             return View();
         }
 
@@ -80,7 +80,7 @@ namespace musicly.Controllers
         // GET: Instruments/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            Authorize();
+            UserAuthorization();
 
             if (id == null)
             {
@@ -101,7 +101,7 @@ namespace musicly.Controllers
         // GET: Instruments/Create
         public IActionResult Create()
         {
-            Authorize();
+            AdminAuthorization();
 
             ViewData["TypeID"] = new SelectList(_context.InstrumentType, "Id", "Name");
             return View();
@@ -114,7 +114,7 @@ namespace musicly.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Description,Price,ImagePath,TypeID")] Instrument instrument, IFormFile file)
         {
-            Authorize();
+            AdminAuthorization();
 
             if (ModelState.IsValid)
             {
@@ -130,7 +130,7 @@ namespace musicly.Controllers
         // GET: Instruments/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            Authorize();
+            AdminAuthorization();
 
             if (id == null)
             {
@@ -153,7 +153,7 @@ namespace musicly.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Price,ImagePath,TypeID")] Instrument instrument)
         {
-            Authorize();
+            AdminAuthorization();
             if (id != instrument.Id)
             {
                 return NotFound();
@@ -186,7 +186,7 @@ namespace musicly.Controllers
         // GET: Instruments/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            Authorize();
+            AdminAuthorization();
             if (id == null)
             {
                 return NotFound();
@@ -208,7 +208,7 @@ namespace musicly.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            Authorize();
+            AdminAuthorization();
             var instrument = await _context.Instrument.FindAsync(id);
             _context.Instrument.Remove(instrument);
             await _context.SaveChangesAsync();
@@ -217,13 +217,19 @@ namespace musicly.Controllers
 
         private bool InstrumentExists(int id)
         {
-            Authorize();
+            UserAuthorization();
             return _context.Instrument.Any(e => e.Id == id);
         }
 
-        private void Authorize()
+        private void AdminAuthorization()
         {
             if (HttpContext.Session.GetInt32("Admin") == null)
+                throw new UnauthorizedAccessException();
+        }
+
+        private void UserAuthorization()
+        {
+            if (HttpContext.Session.GetInt32("UserId") == null)
                 throw new UnauthorizedAccessException();
         }
     }
