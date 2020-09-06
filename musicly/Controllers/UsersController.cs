@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -17,18 +18,22 @@ namespace musicly.Controllers
 
         public UsersController(musiclyContext context)
         {
+            
             _context = context;
         }
 
         // GET: Users
         public async Task<IActionResult> Index()
         {
+            Authorize();
             return View(await _context.User.ToListAsync());
         }
 
         // GET: Users/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            Authorize();
+
             if (id == null)
             {
                 return NotFound();
@@ -47,6 +52,8 @@ namespace musicly.Controllers
         // GET: Users/Create
         public IActionResult Create()
         {
+            Authorize();
+          
             return View();
         }
 
@@ -58,6 +65,7 @@ namespace musicly.Controllers
         [Authorize]
         public async Task<IActionResult> Create([Bind("Id,UserName,Password,FirstName,LastName,BirthDate,City,IsAdmin")] User user)
         {
+            Authorize();
             if (ModelState.IsValid)
             {                
                 _context.Add(user);
@@ -70,6 +78,8 @@ namespace musicly.Controllers
         // GET: Users/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            Authorize();
+           
             if (id == null)
             {
                 return NotFound();
@@ -90,6 +100,8 @@ namespace musicly.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,UserName,Password,FirstName,LastName,BirthDate,City,IsAdmin")] User user)
         {
+            Authorize();
+
             if (id != user.Id)
             {
                 return NotFound();
@@ -121,6 +133,8 @@ namespace musicly.Controllers
         // GET: Users/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            Authorize(); 
+
             if (id == null)
             {
                 return NotFound();
@@ -141,6 +155,7 @@ namespace musicly.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            Authorize();
             var user = await _context.User.FindAsync(id);
             _context.User.Remove(user);
             await _context.SaveChangesAsync();
@@ -149,7 +164,14 @@ namespace musicly.Controllers
 
         private bool UserExists(int id)
         {
+            Authorize();
             return _context.User.Any(e => e.Id == id);
+        }
+
+        private void Authorize()
+        {
+            if (HttpContext.Session.GetInt32("Admin") == null)
+                throw new UnauthorizedAccessException();
         }
     }
 }
