@@ -3,20 +3,67 @@
     ViewData["Title"] = "Error";
 }
 
-<h1 class="text-danger">Error.</h1>
-<h2 class="text-danger">An error occurred while processing your request.</h2>
+<style type="text/css">
+    #notfound {
+        position: relative;
+        height: 100vh;
+    }
 
-@if (Model.ShowRequestId)
-{
-    <p>
-        <strong>Request ID:</strong> <code>@Model.RequestId</code>
-    </p>
-}
+    #notfound .notfound {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        -webkit-transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+    }
 
-<h3>Development Mode</h3>
-<p>
-    Swapping to <strong>Development</strong> environment will display more detailed information about the error that occurred.
-</p>
-<p>
-    <strong>Development environment should not be enabled in deployed applications</strong>, as it can result in sensitive information from exceptions being displayed to end users. For local debugging, development environment can be enabled by setting the <strong>ASPNETCORE_ENVIRONMENT</strong> environment variable to <strong>Development</strong>, and restarting the application.
-</p>
+    .notfound .notfound-400 {
+        position: relative;
+        height: 150px;
+        line-height: 150px;
+        margin-bottom: 25px;
+    }
+
+    .notfound .notfound-400 h1 {
+        font-family: 'Titillium Web', sans-serif;
+        font-size: 186px;
+        font-weight: 900;
+        margin: 0px;
+        text-transform: uppercase;
+        background: url('https://colorlib.com/etc/404/colorlib-error-404-1/img/text.png');
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-size: cover;
+        background-position: center;
+    }
+
+    .notfound a {
+        font-family: 'Titillium Web', sans-serif;
+        display: inline-block;
+        text-transform: uppercase;
+        color: #fff;
+        text-decoration: none;
+        border: none;
+        background: #5c91fe;
+        padding: 10px 40px;
+        font-size: 14px;
+        font-weight: 700;
+        border-radius: 1px;
+        margin-top: 15px;
+        -webkit-transition: 0.2s all;
+        transition: 0.2s all;
+    }
+</style>
+
+
+<div id="notfound">
+    <div class="notfound">
+        <div class="notfound-400">
+            <h1>@Model.ErrorCode</h1>
+        </div>
+        <h2>Oops!</h2>
+        <p>@Model.Description</p>
+        <a href="#">Go To Homepage</a>
+    </div>
+</div>

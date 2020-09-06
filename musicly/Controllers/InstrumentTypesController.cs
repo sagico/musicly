@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +23,8 @@ namespace musicly.Controllers
         // GET: InstrumentTypes
         public async Task<IActionResult> Index(string searchString)
         {
+            Authorize();
+
             var instrumentTypes = from i in _context.InstrumentType select i;
 
             if (!String.IsNullOrEmpty(searchString))
@@ -35,6 +38,8 @@ namespace musicly.Controllers
         // GET: InstrumentTypes/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            Authorize();
+
             if (id == null)
             {
                 return NotFound();
@@ -63,6 +68,8 @@ namespace musicly.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name")] InstrumentType instrumentType)
         {
+            Authorize();
+
             if (ModelState.IsValid)
             {
                 _context.Add(instrumentType);
@@ -75,6 +82,8 @@ namespace musicly.Controllers
         // GET: InstrumentTypes/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            Authorize();
+
             if (id == null)
             {
                 return NotFound();
@@ -95,6 +104,8 @@ namespace musicly.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] InstrumentType instrumentType)
         {
+            Authorize();
+
             if (id != instrumentType.Id)
             {
                 return NotFound();
@@ -126,6 +137,8 @@ namespace musicly.Controllers
         // GET: InstrumentTypes/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            Authorize();
+
             if (id == null)
             {
                 return NotFound();
@@ -146,6 +159,8 @@ namespace musicly.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            Authorize();
+
             var instrumentType = await _context.InstrumentType.FindAsync(id);
             _context.InstrumentType.Remove(instrumentType);
             await _context.SaveChangesAsync();
@@ -154,7 +169,15 @@ namespace musicly.Controllers
 
         private bool InstrumentTypeExists(int id)
         {
+            Authorize();
+
             return _context.InstrumentType.Any(e => e.Id == id);
+        }
+
+        private void Authorize()
+        {
+            if (HttpContext.Session.GetInt32("Admin") == null)
+                throw new UnauthorizedAccessException();
         }
     }
 }
