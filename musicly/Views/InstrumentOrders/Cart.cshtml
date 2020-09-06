@@ -67,6 +67,19 @@
                 items: JSON.parse(sessionStorage.cart),
                 date: new Date()
             };
+
+            $.ajax({
+                url: "/Instruments/order",
+                method: "POST",
+                data: finalCart,
+                success: function (res, status, xhr) {
+                    console.log("sa", res, status)
+                },
+                error: function (xhr, status, err) {
+                    console.log("fail");
+                    return [];
+                }
+            })
             // TODO: send to controller api req
         });
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using musicly.Data;
@@ -31,6 +32,18 @@ namespace musicly.Controllers
             }
 
             return View(await orders.ToListAsync());
+        }
+
+        // POST: Instruments/order
+        [Route("Instruments/order")]
+        [HttpPost]
+        public IActionResult createOrder(CartItem [] cartItems, DateTime date)
+        {
+            int a = 4;
+            Order order = new Order();
+            order.OrderDate = date;
+            order.UserId = (int)HttpContext.Session.GetInt32("UserId");
+            return Ok();
         }
 
         // GET: InstrumentOrdersController/Cart
