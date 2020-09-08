@@ -43,22 +43,6 @@
         </p>
     </section>
 
-    <div class="widget">
-        <div class="left-panel panel">
-            <div class="city">
-                Avg temp in our stores
-            </div>
-            <div class="temp">
-                <span id="temp"></span>&deg;
-                <img src="https://www.accuweather.com/images/weathericons/01.svg" alt="" width="60">
-            </div>
-        </div>
-    </div>
-
-
-
-
-
     <div id="canvas-wrap">
         <canvas id="myCanvas">
         </canvas>
@@ -89,7 +73,6 @@
                     let location = { lat: item.lat, lng: item.lng };
                     var marker = new google.maps.Marker({ position: location, map: map });
                 });
-                getWeather(data);
             });
 
             $("#myCanvas").click(function () {
@@ -97,33 +80,6 @@
             });
 
         }
-
-        function getWeather(locations) {
-            var sum = 0;
-            console.log(locations)
-            $.each(locations, function (i, item) {
-                var weatherWS_CorsWrapped = 'https://cors-anywhere.herokuapp.com/https://api.openweathermap.org/data/2.5/weather?lat=' + item.lat + '&lon=' + item.lng + '&appid=d4d7a1a00144183b60e1b8f777d932ed&units=metric';
-
-                // GET: Weather info
-                $.ajax({
-                    url: weatherWS_CorsWrapped,
-                    type: "GET",
-                    headers: { 'Access-Control-Allow-Origin': '*' },
-                    success: function (r) {
-                        sum = sum + r.main.temp;
-                        if (i == locations.length - 1) {
-                            $("#temp").text(Math.floor(sum / locations.length));
-                        }
-                    },
-                    error: function (e) {
-                        alert("Could not query weather information")
-                    },
-                    async: false
-                });
-            });
-        }
-
-
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyByfBxIl9_Kz12_97dMtFdVDlbn7zk7dts&callback=myMap"></script>
 
