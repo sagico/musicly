@@ -15,6 +15,46 @@
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!------ Include the above in your HEAD tag ---------->
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script>
+       
+            // GET: News info
+            $.ajax({
+                url: "https://cors-anywhere.herokuapp.com/https://newsapi.org/v2/top-headlines?country=il&category=music&apiKey=112a5b2506054a83b7ec95a1574d3764",
+                type: "GET",
+                headers: { 'Access-Control-Allow-Origin': '*' },
+                success: function (r) {
+                    console.log("asdasd")
+                    $.each(r.articles, function (i, item) {
+
+                        var sign = document.createElement("span");
+                        sign.className = "glyphicon glyphicon-backward pad";
+                        $("#articles-view").append(sign);
+                        $("#articles-view").append(item.title);
+                    });
+                },
+                error: function (e) {
+                    alert("Could not query news")
+                },
+                async: true
+            });
+
+
+    </script>
+
+    <style>
+        .pad {
+            padding-right: 15px;
+            padding-left: 15px;
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -33,9 +73,8 @@
                     <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
-
                     @if (Context.Session.GetString("UserName") != null &&
-                       Context.Session.GetInt32("Admin") != 1)
+                     Context.Session.GetInt32("Admin") != 1)
                     {
                         <li><a asp-area="" asp-controller="Instruments" asp-action="InstrumentsList">Instruments</a></li>
                         <li><a asp-area="" asp-controller="InstrumentOrdersController" asp-action="Cart">My Cart</a></li>
@@ -58,14 +97,22 @@
             </div>
         </div>
     </nav>
+    <div class="onoffswitch3">
+        <label class="onoffswitch3-label" for="myonoffswitch3">
+            <span class="onoffswitch3-inner">
+                <marquee id="articles-view" class="scroll-text" style="direction:rtl"></marquee>
+                <span class="onoffswitch3-switch"><span class="glyphicon"></span></span>
+                
+            </span>
+        </label>
+    </div>
 
     <partial name="_CookieConsentPartial" />
-
     <div class="container body-content">
         <br />
         @if (Context.Session.GetString("UserName") != null &&
-           Context.Session.GetString("FirstName") != null &&
-           Context.Session.GetInt32("Admin") != 1)
+          Context.Session.GetString("FirstName") != null &&
+          Context.Session.GetInt32("Admin") != 1)
         {
             <h1 class="display-4">Welcome, @Context.Session.GetString("FirstName")</h1>
         }
@@ -73,14 +120,12 @@
         {
             <h1 class="display-4">Welcome, Admin</h1>
         }
-
         @RenderBody()
         <hr />
         <footer>
             <p>&copy; 2020 - musicly</p>
         </footer>
     </div>
-
     <environment include="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
@@ -92,6 +137,7 @@
                 asp-fallback-test="window.jQuery"
                 crossorigin="anonymous"
                 integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT">
+
         </script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"
                 asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
@@ -101,7 +147,6 @@
         </script>
         <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
-
     @RenderSection("Scripts", required: false)
 </body>
 </html>
