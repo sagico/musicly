@@ -15,38 +15,44 @@
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
+  
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <!-- Popper JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <!------ Include the above in your HEAD tag ---------->
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
     <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
     <script>
-       
-            // GET: News info
-            $.ajax({
-                url: "https://cors-anywhere.herokuapp.com/https://newsapi.org/v2/top-headlines?country=il&category=music&apiKey=112a5b2506054a83b7ec95a1574d3764",
-                type: "GET",
-                headers: { 'Access-Control-Allow-Origin': '*' },
-                success: function (r) {
-                    console.log("asdasd")
-                    $.each(r.articles, function (i, item) {
 
-                        var sign = document.createElement("span");
-                        sign.className = "glyphicon glyphicon-backward pad";
-                        $("#articles-view").append(sign);
-                        $("#articles-view").append(item.title);
-                    });
-                },
-                error: function (e) {
-                    alert("Could not query news")
-                },
-                async: true
-            });
+        // GET: News info
+        $.ajax({
+            url: "https://cors-anywhere.herokuapp.com/https://newsapi.org/v2/top-headlines?country=il&category=music&apiKey=112a5b2506054a83b7ec95a1574d3764",
+            type: "GET",
+            headers: { 'Access-Control-Allow-Origin': '*' },
+            success: function (r) {
+                console.log("asdasd")
+                $.each(r.articles, function (i, item) {
 
-
+                    var sign = document.createElement("span");
+                    sign.className = "glyphicon glyphicon-backward pad";
+                    $("#articles-view").append(sign);
+                    $("#articles-view").append(item.title);
+                });
+            },
+            error: function (e) {
+                alert("Could not query news")
+            },
+            async: true
+        });
     </script>
 
     <style>
@@ -54,55 +60,129 @@
             padding-right: 15px;
             padding-left: 15px;
         }
+
+
+        #myNavbar {
+            top: 0;
+            position: absolute;
+            width: 100%;
+            border-radius: 0;
+            height:50px;
+        }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
+
+    <!---<div class="navbar-collapse">
+        <ul class="nav navbar-nav navbar-right navbar-nav ml-auto">
+
+            @if (Context.Session.GetString("UserName") != null &&
+    Context.Session.GetInt32("Admin") != 1)
+            {
+                <li><a asp-area="" asp-controller="Instruments" asp-action="InstrumentsList">Instruments</a></li>
+                <li><a asp-area="" asp-controller="InstrumentOrdersController" asp-action="Cart">🛒</a></li>
+                <li class="logout">@Html.ActionLink("Logout", "Logout", "Login")</li>
+            }
+            @if (Context.Session.GetInt32("Admin") == 1)
+            {
+                <li><a asp-area="" asp-controller="Users" asp-action="Index">Users</a></li>
+                <li><a asp-area="" asp-controller="InstrumentTypes" asp-action="Index">Instrument Types</a></li>
+                <li><a asp-area="" asp-controller="InstrumentOrders" asp-action="Index">Orders</a></li>
+                <li><a asp-area="" asp-controller="Instruments" asp-action="Index">Instruments</a></li>
+                <li class="logout">@Html.ActionLink("Logout", "Logout", "Login")</li>
+            }
+            else if (Context.Session.GetString("UserName") == null)
+            {
+                <li>@Html.ActionLink("Register", "Index", "Register")</li>
+                <li>@Html.ActionLink("Login", "Index", "Login")</li>
+            }
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a asp-area="" asp-controller="Home" asp-action="Contact">צור קשר</a>
+            </li>
+            <li class="nav-item">
+                <a asp-area="" asp-controller="Home" asp-action="About">אודות</a>
+            </li>
+            <li class="nav-item">
+                <a asp-area="" asp-controller="Home" asp-action="Index">דף הבית</a>
+            </li>
+            <li class="nav-item">
+                <a asp-area="" asp-controller="Home" asp-action="Index">מוזיקלי</a>
+            </li>
+        </ul>
+
+    </div>--->
+
+    <nav id="myNavbar" class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="d-flex flex-grow-1">
+            <ul class="navbar-nav" style="height:50px">
+                @if (Context.Session.GetString("UserName") == null)
+                {
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Register" asp-action="Index">הרשמה</a>
+                    </li>
+                }
+                else
+                {
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Login" asp-action="Logout">התנתק</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="InstrumentOrdersController" asp-action="Cart">🛒</a>
+                    </li>
+                }
+            </ul>
+
+            <div class="w-100 text-right">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#myNavbar7">
+                    <span class="navbar-toggler-icon"></span>
                 </button>
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">musicly</a>
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
-                    @if (Context.Session.GetString("UserName") != null &&
-                     Context.Session.GetInt32("Admin") != 1)
-                    {
-                        <li><a asp-area="" asp-controller="Instruments" asp-action="InstrumentsList">Instruments</a></li>
-                        <li><a asp-area="" asp-controller="InstrumentOrdersController" asp-action="Cart">My Cart</a></li>
-                        <li class="logout">@Html.ActionLink("Logout", "Logout", "Login")</li>
-                    }
-                    @if (Context.Session.GetInt32("Admin") == 1)
-                    {
-                        <li><a asp-area="" asp-controller="Users" asp-action="Index">Users</a></li>
-                        <li><a asp-area="" asp-controller="InstrumentTypes" asp-action="Index">Instrument Types</a></li>
-                        <li><a asp-area="" asp-controller="InstrumentOrders" asp-action="Index">Orders</a></li>
-                        <li><a asp-area="" asp-controller="Instruments" asp-action="Index">Instruments</a></li>
-                        <li class="logout">@Html.ActionLink("Logout", "Logout", "Login")</li>
-                    }
-                    else if (Context.Session.GetString("UserName") == null)
-                    {
-                        <li>@Html.ActionLink("Register", "Index", "Register")</li>
-                        <li>@Html.ActionLink("Login", "Index", "Login")</li>
-                    }
-                </ul>
             </div>
         </div>
+        <div class="navbar-collapse flex-grow-1 text-right">
+            <ul class="navbar-nav ml-auto flex-nowrap">
+
+                <li class="nav-item">
+                    <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Contact">צור קשר</a>
+                </li>
+                @if (Context.Session.GetString("UserName") != null && Context.Session.GetInt32("Admin") != 1)
+                {
+                    <li class="nav-link" class="nav-item">
+                        <a asp-area="" asp-controller="Instruments" asp-action="InstrumentsList">Instruments</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Login" asp-action="Index">התחבר</a>
+                    </li>
+                }
+
+                @if (Context.Session.GetString("UserName") == null)
+                {
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Login" asp-action="Index">התחבר</a>
+                    </li>
+                }
+                <li class="nav-item">
+                    <a class="nav-link" asp-area="" asp-controller="Home" asp-action="About">אודות</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">דף הבית</a>
+                </li>
+                <a class="navbar-brand" href="#">
+                    מוזיקלי
+                </a>
+            </ul>
+        </div>
     </nav>
+
+
     <div class="onoffswitch3">
         <label class="onoffswitch3-label" for="myonoffswitch3">
             <span class="onoffswitch3-inner">
                 <marquee id="articles-view" class="scroll-text" style="direction:rtl"></marquee>
                 <span class="onoffswitch3-switch"><span class="glyphicon"></span></span>
-                
+
             </span>
         </label>
     </div>
@@ -111,8 +191,8 @@
     <div class="container body-content">
         <br />
         @if (Context.Session.GetString("UserName") != null &&
-          Context.Session.GetString("FirstName") != null &&
-          Context.Session.GetInt32("Admin") != 1)
+        Context.Session.GetString("FirstName") != null &&
+        Context.Session.GetInt32("Admin") != 1)
         {
             <h1 class="display-4">Welcome, @Context.Session.GetString("FirstName")</h1>
         }
