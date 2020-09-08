@@ -4,25 +4,28 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Statistics</h2>
+<h2>נתוני סטטיסטיקה</h2>
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://d3js.org/d3.v6.min.js"></script>
 
-<div class="col-sm-4">
-    <h4>Instrument Types Average Prices</h4>
-    <hr />
-    <div id="typeAveragePriceChartContainer" style="width:200px; height:200px"></div>
+<div class="col-sm-6" style="display:flex">
+    <div>
+        <h4>מחיר ממוצע לכל סוג של כלי נגינה</h4>
+        <div id="typeAveragePriceChartContainer" style="width:400px; height:200px"></div>
+    </div>
 
-    <h4>Instrument Types Count</h4>
-    <div id="typeCountChartContainer" style="width:200px; height:200px"></div>
+    <div>
+        <h4>כמות הכלים מכל סוג</h4>
+        <div id="typeCountChartContainer" style="width:400px; height:200px"></div>
+    </div>
 </div>
 
 <script>
     function drawBar(data, id) {
-        var margin = { top: 20, right: 20, bottom: 30, left: 40 },
-            width = 500 - margin.left - margin.right,
-            height = 300 - margin.top - margin.bottom;
+        var margin = { top: 20, right: 50, bottom: 30, left: 50 },
+            width = 400 - margin.left - margin.right,
+            height = 200 - margin.top - margin.bottom;
             var color = d3.schemeCategory10;
 
             var x = d3.scaleBand()
@@ -37,13 +40,12 @@
                     .append("g")
                     .attr("transform",
                             "translate(" + margin.left + "," + margin.top + ")");
-            // Scale the range of the data in the domains
+
+            // Set the domains of the data
             x.domain(data.map(function (d, i) { return i}));
             y.domain([0, d3.max(data, function (d) { return d.value; })]);
-            //margin = 200,
-            //width = svg.attr("width") - margin,
-            //height = svg.attr("height") - margin;
 
+            // Make the data into a chart
              svg.append('g').selectAll('rect')
             .data(data)
             .enter().append("rect")
@@ -54,13 +56,15 @@
             .attr("height", function(d) { return height - y(d.value); })
             .attr('fill', function(d, i) { return color[i]; });
             var g = svg.append("g")
-                       .attr("transform", "translate(" + 100 + "," + 100 + ")");
-             // add the x Axis
+            .attr("transform", "translate(" + 100 + "," + 100 + ")");
+
+            // Add axises
+            // x Axis
             svg.append("g")
                 .attr("transform", "translate(0," + height + ")")
                 .call(d3.axisBottom(x).tickFormat(function (d) { return data[d].name; }));           
 
-            // add the y Axis
+            // y Axis
             svg.append("g")
                 .call(d3.axisLeft(y))
                 .append("text")
