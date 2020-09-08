@@ -29,14 +29,14 @@
         border-radius: 12px;
     }
 
-    .instrumentCard:hover {
-        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-        transition: 0.1s;
-    }
+        .instrumentCard:hover {
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+            transition: 0.1s;
+        }
 
     .filters {
         background-color: blue;
-        text-align:right !important;
+        text-align: right !important;
     }
 
     .instrumentImage {
@@ -60,17 +60,17 @@
         margin-top: 5px;
     }
 
-    .instrumentPrice::after {
-        content: "₪";
-    }
+        .instrumentPrice::after {
+            content: "₪";
+        }
 
     .addToCartBtn {
         background-color: #008CBA;
         position: initial;
-        color:white;
-        border-radius:10px;
-        border:none;
-        font-size:24px;
+        color: white;
+        border-radius: 10px;
+        border: none;
+        font-size: 24px;
     }
 
         .addToCartBtn:hover {
@@ -91,39 +91,40 @@
     <div class="container">
         <div class="row">
             <div class="main-content" style="min-width:100%">
-                <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10" >
+                <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10">
                     <div id="instrumentList" class="row instrumentList" style="justify-content:center">
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
                     <div class="filter" style="text-align:right" dir="rtl">
                         <h3 class="filter_title">סינון</h3>
+                        <input type="text" id="NameSearch" placeholder="חיפוש כלי נגינה" class="form-control" />
                         <h4 class="heading">מחיר</h4>
                         <div class="scrollbar-prop">
                             <ul class="list-unstyled">
                                 <li class="in_range">
                                     <label>
-                                        <input over="0" under="500" type="checkbox" class="checkbox" role="checkbox" onclick="">עד 500 ₪
+                                        <input over="0" under="500" type="checkbox" class="checkbox priceFilter" role="checkbox" onclick="">עד 500 ₪
                                     </label>
                                 </li>
                                 <li class="in_range">
                                     <label>
-                                        <input over="500" under="1000" name="" type="checkbox" class="checkbox" role="checkbox" onclick="">500-1000 ₪
+                                        <input over="500" under="1000" name="" type="checkbox" class="checkbox priceFilter" role="checkbox" onclick="">500-1000 ₪
                                     </label>
                                 </li>
                                 <li class="in_range">
                                     <label>
-                                        <input over="1000" under="1500" type="checkbox" class="checkbox" role="checkbox" onclick="">1000-1500 ₪
+                                        <input over="1000" under="1500" type="checkbox" class="checkbox priceFilter" role="checkbox" onclick="">1000-1500 ₪
                                     </label>
                                 </li>
                                 <li class="in_range">
                                     <label>
-                                        <input over="1500" under="2000" type="checkbox" class="checkbox" role="checkbox" onclick="">1500-2000 ₪
+                                        <input over="1500" under="2000" type="checkbox" class="checkbox priceFilter" role="checkbox" onclick="">1500-2000 ₪
                                     </label>
                                 </li>
                                 <li class="in_range">
                                     <label>
-                                        <input over="2000" under="99999999" type="checkbox" class="checkbox" role="checkbox" onclick="">2000 ומעלה
+                                        <input over="2000" under="99999999" type="checkbox" class="checkbox priceFilter" role="checkbox" onclick="">2000 ומעלה
                                     </label>
                                 </li>
                             </ul>
@@ -141,43 +142,66 @@
             }
             var allInstruments = await getAllInstruments();
             createInstruments(allInstruments);
+            console.table(allInstruments);
+            console.log(allInstruments);
             var filters = [];
 
-            $('input').on('click', (event) => {
-                var target = event.target;
-                var over = target.getAttribute('over');
-                var under = target.getAttribute('under');
-                $("#instrumentList").empty();
-                if (target.checked) {
-                    filters.push({ over, under })
-                } else {
-                    filters = filters.filter(filter => !(filter.over == over && filter.under == under));
-                }
-                if (filters.length == 0) {
-                    createInstruments(allInstruments);
-                } else {
-                    createInstruments(filterInstruments(allInstruments, filters))
-                }
-            })
-
-            $('.addToCartBtn').on('click', (event) => {
-                var target = event.target;
-                var instrumentId = target.getAttribute('instrumentId');
-                var cart = JSON.parse(sessionStorage.cart);
-                var exists = 0;
-                for (cartItem of cart) {
-                    if (cartItem.id == instrumentId) {
-                        cartItem.quantity++;
-                        exists++;
+            $('.priceFilter').on('click',
+                (event) => {
+                    debugger;
+                    var target = event.target;
+                    var over = target.getAttribute('over');
+                    var under = target.getAttribute('under');
+                    $("#instrumentList").empty();
+                    if (target.checked) {
+                        filters.push({ over, under })
+                    } else {
+                        filters = filters.filter(filter => !(filter.over == over && filter.under == under));
                     }
-                }
-                if (!exists) {
-                    cart.push({ id: instrumentId, quantity: 1 })
-                }
-                sessionStorage.cart = JSON.stringify(cart);
-            })
+                    var userSearch = $('#NameSearch').val();
+                    var filteredInstruments = filterByName(allInstruments, userSearch);
+                    if (filters.length == 0) {
+                        createInstruments(filteredInstruments);
+                    } else {
+                        createInstruments(filterInstruments(filteredInstruments, filters))
+                    }
+                })
+
+            $('.addToCartBtn').on('click',
+                (event) => {
+                    var target = event.target;
+                    var instrumentId = target.getAttribute('instrumentId');
+                    var cart = JSON.parse(sessionStorage.cart);
+                    var exists = 0;
+                    for (cartItem of cart) {
+                        if (cartItem.id == instrumentId) {
+                            cartItem.quantity++;
+                            exists++;
+                        }
+                    }
+                    if (!exists) {
+                        cart.push({ id: instrumentId, quantity: 1 })
+                    }
+                    sessionStorage.cart = JSON.stringify(cart);
+                });
+            $('#NameSearch').keyup((event) => {
+                //debugger;
+                $("#instrumentList").empty();
+
+                var userSearch = $('#NameSearch').val();
+                var filteredObjects = filterByName(allInstruments, userSearch);
+                var nextFilterObjects = filterInstruments(filteredObjects, filters);
+
+                createInstruments(nextFilterObjects);
+            });
+
+
         });
-        
+
+        const filterByName = (instruments, name) => {
+            return instruments.filter(instrument => instrument.name.includes(name))
+        }
+
         const getAllInstruments = async () => {
             return await $.ajax({
                 url: "/Instruments/list",
@@ -190,6 +214,11 @@
                 }
             })
         }
+
+
+
+
+
 
         const createInstruments = (instruments) => {
             for (instrument of instruments) {
@@ -216,14 +245,17 @@
                 instrumentCard.appendChild(instrumentDescription);
                 instrumentCard.appendChild(instrumentPrice);
                 instrumentCard.appendChild(addToCartBtn);
-                $("#instrumentList").append(instrumentCard)
+                $("#instrumentList").append(instrumentCard);
             }
         }
 
         const filterInstruments = (instruments, filters) => {
+            if (filters.length == 0) {
+                return instruments
+            }
             var filteredInstruments = instruments.filter(instrument => {
                 for (filter of filters) {
-                    if (instrument.price > filter.over && instrument.price <= filter.under) {
+                    if (instrument.price >= filter.over && instrument.price <= filter.under) {
                         return instrument;
                     }
                 }
