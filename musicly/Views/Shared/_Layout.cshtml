@@ -69,6 +69,14 @@
             border-radius: 0;
             height:50px;
         }
+        body{
+            font-family:'Segoe UI';
+        }
+        .greeting{
+            color:white !important;
+            text-decoration:none;
+            white-space:nowrap;
+        }
     </style>
 </head>
 <body>
@@ -129,31 +137,44 @@
                         <a class="nav-link" asp-area="" asp-controller="Login" asp-action="Logout">התנתק</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="InstrumentOrdersController" asp-action="Cart">🛒</a>
+                        <a class="nav-link" style="font-size:24px" asp-area="" asp-controller="InstrumentOrdersController" asp-action="Cart">🛒</a>
                     </li>
+
+                    @if (Context.Session.GetString("UserName") != null &&
+                         Context.Session.GetString("FirstName") != null &&
+                             Context.Session.GetInt32("Admin") != 1)
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link greeting">שלום,  @Context.Session.GetString("FirstName")</a>
+                        </li>
+                    }
+                    else if (Context.Session.GetInt32("Admin") == 1)
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link greeting">שלום, מנהל</a>
+                        </li>
+                    }
+
                 }
             </ul>
 
             <div class="w-100 text-right">
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#myNavbar7">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+                <ul class="navbar-nav" style="height:50px">
+                 
+                </ul>
+                   
             </div>
         </div>
         <div class="navbar-collapse flex-grow-1 text-right">
             <ul class="navbar-nav ml-auto flex-nowrap">
 
-                <li class="nav-item">
+                <!---li class="nav-item">
                     <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Contact">צור קשר</a>
-                </li>
+                </li-->
                 @if (Context.Session.GetString("UserName") != null && Context.Session.GetInt32("Admin") != 1)
                 {
-                    <li class="nav-link" class="nav-item">
-                        <a asp-area="" asp-controller="Instruments" asp-action="InstrumentsList">Instruments</a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Login" asp-action="Index">התחבר</a>
+                    <li class="nav-item" class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Instruments" asp-action="InstrumentsList">כלי נגינה</a>
                     </li>
                 }
 
@@ -170,7 +191,7 @@
                     <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">דף הבית</a>
                 </li>
                 <a class="navbar-brand" href="#">
-                    מוזיקלי
+                    מוזיק🎷י
                 </a>
             </ul>
         </div>
@@ -190,16 +211,6 @@
     <partial name="_CookieConsentPartial" />
     <div class="container body-content">
         <br />
-        @if (Context.Session.GetString("UserName") != null &&
-        Context.Session.GetString("FirstName") != null &&
-        Context.Session.GetInt32("Admin") != 1)
-        {
-            <h1 class="display-4">Welcome, @Context.Session.GetString("FirstName")</h1>
-        }
-        else if (Context.Session.GetInt32("Admin") == 1)
-        {
-            <h1 class="display-4">Welcome, Admin</h1>
-        }
         @RenderBody()
         <hr />
         <footer>
