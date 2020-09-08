@@ -48,12 +48,12 @@ namespace musicly.Controllers
             if(exceptionHandlerPathFeature == null)
             {
                 errorCode = "404";
-                description = "This Page Could Not Be Found";
+                description = "דף האינטרנט שאתה מחפש לא קיים";
             } 
             else if (exceptionHandlerPathFeature?.Error is UnauthorizedAccessException)
             {
                 errorCode = "401";
-                description = "Unautorized To Make That Operation";
+                description = "אינך מורשה לבצע פעולה זאת";
             }
 
             return View(new ErrorViewModel { ErrorCode = errorCode, Description = description });

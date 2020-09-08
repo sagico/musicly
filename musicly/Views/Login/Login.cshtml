@@ -2,25 +2,75 @@
     ViewData["Title"] = "Index";
 }
 
-<h2>Login</h2>
+<style>
+    .login-form {
+        font: 16px/2em;
+        margin: 100px auto;
+        max-width: 400px;
+    }
+
+    form[role=login] {
+        color: #5d5d5d;
+        background: #f2f2f2;
+        padding: 26px;
+        border-radius: 10px;
+        -moz-border-radius: 10px;
+        -webkit-border-radius: 10px;
+    }
+
+        form[role=login] img {
+            display: block;
+            margin: 0 auto;
+            margin-bottom: 35px;
+        }
+
+        form[role=login] input,
+        form[role=login] button {
+            font-size: 18px;
+            margin: 16px 0;
+        }
+
+        form[role=login] > div {
+            text-align: center;
+        }
+
+        .form-links {
+            text-align: center;
+            margin-top: 1em;
+            margin-bottom: 50px;
+        }
+
+        .form-links a {
+            color: #fff;
+        }
+
+        img {
+            position: absolute;
+            width: 110px;
+            top: 15vmin;
+            left: 47vw;
+        }
+</style>
+<script>
+    sessionStorage.clear();
+</script>
+
 <div class="container login">
-    <div class="intro">
-        <h2>Hello</h2>
-        <h4>Sign in to Musicly or <a href="/Register">create an account</a></h4>
-    </div>
-
     <h4 class="invalid-login">@ViewBag.Message</h4>
+    <section class="container">
+        <section class="login-form">
+            <form method="post" action="" role="login">
+                <img src="https://image.flaticon.com/icons/svg/2907/2907004.svg" class="img-responsive" alt="" />
+                <input type="text" name="userName" placeholder="שם משתמש" style="text-align:center" required class="form-control input-lg" />
+                <input type="password" name="password" placeholder="סיסמא" style="text-align:center" required class="form-control input-lg" />
+                <button type="submit" name="go" class="btn btn-lg btn-primary btn-block">התחבר</button>
+                <div>
+                    <a href="/Register">צור חשבון</a>
+                </div>
+            </form>
+        </section>
+    </section>
 
-    <form action="/Login/Login" method="post" class="login-details">
-        <div class="input-group input-group-lg">
-            Enter your user name<input type="text" name="userName" placeholder="User Name" class="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm">
-        </div>
-        <div class="input-group input-group-lg">
-            Enter your password<input type="password" name="password" placeholder="Password" class="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm">
-        </div>
-        <div class="input-group input-group-lg">
-
-            <input type="submit" name="submit" value="Login" class="form-control login-button" aria-label="Large" aria-describedby="inputGroup-sizing-sm">
-        </div>
-    </form>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
 </div>
