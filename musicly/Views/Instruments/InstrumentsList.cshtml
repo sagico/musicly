@@ -135,133 +135,152 @@
         </div>
     </div>
 
-    <script>
-        $(document).ready(async () => {
-            if (sessionStorage.cart == undefined) {
-                sessionStorage.cart = JSON.stringify([]);
-            }
-            var allInstruments = await getAllInstruments();
-            createInstruments(allInstruments);
-            console.table(allInstruments);
-            console.log(allInstruments);
-            var filters = [];
+<script>
+    var filters = [];
+    var nameFilter = "";
+    var allInstruments = [];
+    $(document).ready(async () => {
+        if (sessionStorage.cart == undefined) {
+            sessionStorage.cart = JSON.stringify([]);
+        }
+        allInstruments = await getAllInstruments();
+        createInstruments(allInstruments);
+        console.table(allInstruments);
+        console.log(allInstruments);
+            
 
-            $('.priceFilter').on('click',
-                (event) => {
-                    debugger;
-                    var target = event.target;
-                    var over = target.getAttribute('over');
-                    var under = target.getAttribute('under');
-                    $("#instrumentList").empty();
-                    if (target.checked) {
-                        filters.push({ over, under })
-                    } else {
-                        filters = filters.filter(filter => !(filter.over == over && filter.under == under));
-                    }
-                    var userSearch = $('#NameSearch').val();
-                    var filteredInstruments = filterByName(allInstruments, userSearch);
-                    if (filters.length == 0) {
-                        createInstruments(filteredInstruments);
-                    } else {
-                        createInstruments(filterInstruments(filteredInstruments, filters))
-                    }
-                })
-
-            $('.addToCartBtn').on('click',
-                (event) => {
-                    var target = event.target;
-                    var instrumentId = target.getAttribute('instrumentId');
-                    var cart = JSON.parse(sessionStorage.cart);
-                    var exists = 0;
-                    for (cartItem of cart) {
-                        if (cartItem.id == instrumentId) {
-                            cartItem.quantity++;
-                            exists++;
-                        }
-                    }
-                    if (!exists) {
-                        cart.push({ id: instrumentId, quantity: 1 })
-                    }
-                    sessionStorage.cart = JSON.stringify(cart);
-                });
-            $('#NameSearch').keyup((event) => {
-                //debugger;
+        $('.priceFilter').on('click',
+            (event) => {
+                var target = event.target;
+                var over = target.getAttribute('over');
+                var under = target.getAttribute('under');
                 $("#instrumentList").empty();
+                if (target.checked) {
+                    filters.push({ over, under })
+                } else {
+                    filters = filters.filter(filter => !(filter.over == over && filter.under == under));
+                }
+                //var userSearch = $('#NameSearch').val();
+                //var filteredInstruments = filterByName(allInstruments, userSearch);
+                createFilteredInstruments();
+                //if (filters.length == 0) {
+                //    createInstruments(filteredInstruments);
+                //} else {
+                //    createInstruments(filterInstruments(filteredInstruments, filters))
+                //}
+            })
 
-                var userSearch = $('#NameSearch').val();
-                var filteredObjects = filterByName(allInstruments, userSearch);
-                var nextFilterObjects = filterInstruments(filteredObjects, filters);
-
-                createInstruments(nextFilterObjects);
+        $('.addToCartBtn').on('click',
+            (event) => {
+                var target = event.target;
+                var instrumentId = target.getAttribute('instrumentId');
+                var cart = JSON.parse(sessionStorage.cart);
+                var exists = 0;
+                for (cartItem of cart) {
+                    if (cartItem.id == instrumentId) {
+                        cartItem.quantity++;
+                        exists++;
+                    }
+                }
+                if (!exists) {
+                    cart.push({ id: instrumentId, quantity: 1 })
+                }
+                sessionStorage.cart = JSON.stringify(cart);
             });
+        $('#NameSearch').keyup((event) => {
 
+            //$("#instrumentList").empty();
 
+            //var userSearch = $('#NameSearch').val();
+            //var filteredObjects = filterByName(allInstruments, userSearch);
+            //var nextFilterObjects = filterInstruments(filteredObjects, filters);
+
+            //createInstruments(nextFilterObjects);
+            debugger;
+            nameFilter = $('#NameSearch').val();
+            createFilteredInstruments();
         });
 
-        const filterByName = (instruments, name) => {
-            return instruments.filter(instrument => instrument.name.includes(name))
+
+    });
+
+    const createFilteredInstruments = () => {
+        $("#instrumentList").empty();
+        var filteredObjects = filterByName(allInstruments, nameFilter);
+        var nextFilterObjects = filterInstruments(filteredObjects, filters);
+
+        createInstruments(nextFilterObjects);
+
+
+    }
+
+    const filterByName = (instruments, name) => {
+        if (name === "") {
+            return instruments;
         }
+        return instruments.filter(instrument => instrument.name.includes(name))
+    }
 
-        const getAllInstruments = async () => {
-            return await $.ajax({
-                url: "/Instruments/list",
-                success: function (instruments, status, xhr) {
-                    return instruments;
-                },
-                error: function (xhr, status, err) {
-                    console.log("fail");
-                    return [];
-                }
-            })
-        }
-
-
-
-
-
-
-        const createInstruments = (instruments) => {
-            for (instrument of instruments) {
-                var instrumentCard = document.createElement("div");
-                instrumentCard.className = "instrumentCard col-xs-6 col-sm-4 col-md-3 col-lg-5ths";
-                var instrumentImg = document.createElement("img");
-                instrumentImg.className = "instrumentImage";
-                instrumentImg.setAttribute("src", '/Images/' + instrument.imagePath)
-                var instrumentName = document.createElement("div");
-                instrumentName.className = "instrumentName";
-                instrumentName.innerHTML = instrument.name;
-                var instrumentDescription = document.createElement("div");
-                instrumentDescription.className = "instrumentDescription";
-                instrumentDescription.innerHTML = instrument.description;
-                var instrumentPrice = document.createElement("div");
-                instrumentPrice.className = "instrumentPrice";
-                instrumentPrice.innerHTML = instrument.price;
-                var addToCartBtn = document.createElement("button");
-                addToCartBtn.className = "addToCartBtn";
-                addToCartBtn.setAttribute("instrumentId", instrument.id);
-                addToCartBtn.innerHTML = "הוספה לעגלה 🛒";
-                instrumentCard.appendChild(instrumentImg);
-                instrumentCard.appendChild(instrumentName);
-                instrumentCard.appendChild(instrumentDescription);
-                instrumentCard.appendChild(instrumentPrice);
-                instrumentCard.appendChild(addToCartBtn);
-                $("#instrumentList").append(instrumentCard);
+    const getAllInstruments = async () => {
+        return await $.ajax({
+            url: "/Instruments/list",
+            success: function (instruments, status, xhr) {
+                return instruments;
+            },
+            error: function (xhr, status, err) {
+                console.log("fail");
+                return [];
             }
-        }
+        })
+    }
 
-        const filterInstruments = (instruments, filters) => {
-            if (filters.length == 0) {
-                return instruments
-            }
-            var filteredInstruments = instruments.filter(instrument => {
-                for (filter of filters) {
-                    if (instrument.price >= filter.over && instrument.price <= filter.under) {
-                        return instrument;
-                    }
-                }
-            })
-            return filteredInstruments;
+
+
+
+
+
+    const createInstruments = (instruments) => {
+        for (instrument of instruments) {
+            var instrumentCard = document.createElement("div");
+            instrumentCard.className = "instrumentCard col-xs-6 col-sm-4 col-md-3 col-lg-5ths";
+            var instrumentImg = document.createElement("img");
+            instrumentImg.className = "instrumentImage";
+            instrumentImg.setAttribute("src", '/Images/' + instrument.imagePath)
+            var instrumentName = document.createElement("div");
+            instrumentName.className = "instrumentName";
+            instrumentName.innerHTML = instrument.name;
+            var instrumentDescription = document.createElement("div");
+            instrumentDescription.className = "instrumentDescription";
+            instrumentDescription.innerHTML = instrument.description;
+            var instrumentPrice = document.createElement("div");
+            instrumentPrice.className = "instrumentPrice";
+            instrumentPrice.innerHTML = instrument.price;
+            var addToCartBtn = document.createElement("button");
+            addToCartBtn.className = "addToCartBtn";
+            addToCartBtn.setAttribute("instrumentId", instrument.id);
+            addToCartBtn.innerHTML = "הוספה לעגלה 🛒";
+            instrumentCard.appendChild(instrumentImg);
+            instrumentCard.appendChild(instrumentName);
+            instrumentCard.appendChild(instrumentDescription);
+            instrumentCard.appendChild(instrumentPrice);
+            instrumentCard.appendChild(addToCartBtn);
+            $("#instrumentList").append(instrumentCard);
         }
-    </script>
+    }
+
+    const filterInstruments = (instruments, filters) => {
+        if (filters.length == 0) {
+            return instruments
+        }
+        var filteredInstruments = instruments.filter(instrument => {
+            for (filter of filters) {
+                if (instrument.price >= filter.over && instrument.price <= filter.under) {
+                    return instrument;
+                }
+            }
+        })
+        return filteredInstruments;
+    }
+</script>
 </body>
 </html>
