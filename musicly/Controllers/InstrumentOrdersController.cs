@@ -37,12 +37,26 @@ namespace musicly.Controllers
         // POST: Instruments/order
         [Route("Instruments/order")]
         [HttpPost]
-        public IActionResult createOrder(CartItem [] cartItems, DateTime date)
+        public IActionResult createOrder([FromBody]CartItem[] cartItems, [FromBody]DateTime date)
         {
-            int a = 4;
             Order order = new Order();
             order.OrderDate = date;
             order.UserId = (int)HttpContext.Session.GetInt32("UserId");
+            // save order
+
+
+            foreach (CartItem cartItem in cartItems)
+            {
+                InstrumentOrder io = new InstrumentOrder();
+                io.InstrumentId = cartItem.instrumentId;
+                io.Quantity = cartItem.quantity;
+                io.OrderId = order.Id;
+
+            }
+
+
+
+
             return Ok();
         }
 

@@ -64,13 +64,19 @@
 
         $('#completeOrder').on('click', (event) => {
             var finalCart = {
-                items: JSON.parse(sessionStorage.cart),
-                date: new Date()
+                //items: JSON.parse(sessionStorage.cart),
+                //date: new Date().toISOString()
+                date:"test"
             };
 
             $.ajax({
                 url: "/Instruments/order",
                 method: "POST",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                dataType: "json",
                 data: finalCart,
                 success: function (res, status, xhr) {
                     console.log("sa", res, status)
