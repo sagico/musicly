@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using musicly.Data;
 using musicly.Models;
 
@@ -38,11 +39,19 @@ namespace musicly.Controllers
         [Route("Images/{imageName}")]
         public async Task<IActionResult> getImage(string imageName)
         {
+            FileStream image = null;
             UserAuthorization();
-
-            var image = System.IO.File.OpenRead("./Views/Instruments/Images/" + imageName);
-            return File(image, "image/jpg");
-
+            try
+            {
+                image = System.IO.File.OpenRead("./Views/Instruments/Images/" + imageName);
+                
+            }
+            catch
+            {
+                image = System.IO.File.OpenRead("./Views/Instruments/Images/NotFound.png");
+            }
+                
+            return File(image, "image/jpg");          
         }
 
         // GET: Instruments
