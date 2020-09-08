@@ -29,7 +29,13 @@ namespace musicly.Controllers
             AdminAuthorization();
 
             var fileName = Path.Combine(_hostingEnvironment.ContentRootPath + "\\images\\instruments", Path.GetFileName(file.FileName));
-            instrument.ImagePath = "/images/apartments/" + file.FileName;
+            int count = 0;
+            while (System.IO.File.Exists(fileName))
+            {
+                fileName = Path.Combine(_hostingEnvironment.ContentRootPath + "\\images\\instruments", count.ToString() + Path.GetFileName(file.FileName));
+                count++;
+            }
+            instrument.ImagePath = "/images/apartments/" + count.ToString() + file.FileName;
 
             // If the file does not exist already creating it
             file.CopyTo(new FileStream(fileName, FileMode.Create));
@@ -127,7 +133,10 @@ namespace musicly.Controllers
 
             if (ModelState.IsValid)
             {
-                SaveImage(instrument, file);
+                if (file != null)
+                {
+                    SaveImage(instrument, file);
+                }
                 _context.Add(instrument);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -160,7 +169,7 @@ namespace musicly.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Price,ImagePath,TypeID")] Instrument instrument)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Price,ImagePath,TypeID")] Instrument instrument, IFormFile file)
         {
             AdminAuthorization();
             if (id != instrument.Id)
@@ -172,6 +181,10 @@ namespace musicly.Controllers
             {
                 try
                 {
+                    if (file != null)
+                    {
+                        SaveImage(instrument, file);
+                    }
                     _context.Update(instrument);
                     await _context.SaveChangesAsync();
                 }
