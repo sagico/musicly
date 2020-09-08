@@ -3,29 +3,52 @@
     ViewData["Title"] = "Cart";
 }
 <style>
-    .removeBtn{
-
+    .removeBtn {
+        position: relative;
+        vertical-align: top;
+        width: 35%;
+        height: 30px;
+        padding: 0;
+        font-size: 14px;
+        color: white;
+        text-align: center;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+        background: #c0392b;
+        border: 0;
+        border-radius:10px;
+        border-bottom: 2px solid #b53224;
+        cursor: pointer;
+        -webkit-box-shadow: inset 0 -2px #b53224;
+        box-shadow: inset 0 -2px #b53224;
     }
+
+    table{
+        text-align:right;
+    }
+    th{
+        text-align:right;
+    }
+
 
 </style>
 
 <table class="table">
     <thead class="thead-dark">
         <tr>
-            <th scope="col">Instrument</th>
-            <th scope="col">Quantity</th>
-            <th scope="col">Price For One</th>
-            <th scope="col">Total Price</th>
-            <th scope="col">Remove</th>
+            <th scope="col">הסרה</th>
+            <th scope="col">סך הכל</th>
+            <th scope="col">מחיר ליחידה</th>
+            <th scope="col">כמות</th>
+            <th scope="col">שם המוצר</th>
         </tr>
     </thead>
     <tbody id="cartItems">
    
     </tbody>
 </table>
-<label>Total Cart Price:</label><label id="totalCartPrice"></label>
+<label id="totalCartPrice"></label><label>:מחיר כולל</label>
 <br/>
-<button id="completeOrder" class="btn btn-success">Complete Order</button>
+<button id="completeOrder" class="btn btn-success">סיום הזמנה</button>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script>
     $(document).ready(async () => {
@@ -97,15 +120,16 @@
             itemsTotalPrice.appendChild(document.createTextNode(cartItem.quantity * cartItem.price));
             var removeItem = document.createElement("td");
             var removeBtn = document.createElement("button");
-            removeBtn.innerHTML = 'X';
+            removeBtn.innerHTML = 'הסר';
             removeBtn.className = "removeBtn";
             removeBtn.setAttribute('instrumentId', cartItem.id);
             removeItem.appendChild(removeBtn);
-            cartItemRow.appendChild(itemName);
+            
+            cartItemRow.appendChild(removeItem);
+            cartItemRow.appendChild(itemsTotalPrice);
             cartItemRow.appendChild(itemPrice);
             cartItemRow.appendChild(itemQuantity);
-            cartItemRow.appendChild(itemsTotalPrice);
-            cartItemRow.appendChild(removeItem);
+            cartItemRow.appendChild(itemName);
             $('#cartItems').append(cartItemRow);
         }
     }
