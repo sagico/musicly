@@ -59,7 +59,9 @@
             padding-right: 15px;
             padding-left: 15px;
         }
-
+        body {
+            background-color: #4e41412e;
+        }
 
         #myNavbar {
             top: 0;
@@ -186,9 +188,8 @@
 
     <partial name="_CookieConsentPartial" />
     <div class="container body-content">
-        <br />
         @RenderBody()
-        <hr />
+        <hr style="border-top: 1px solid black;" />
         <footer>
             <p>&copy; 2020 - musicly</p>
         </footer>

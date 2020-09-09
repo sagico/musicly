@@ -26,6 +26,7 @@
         margin-right: 1%;
         margin-bottom: 1%;
         border-radius: 12px;
+        background-color:white;
     }
 
         .instrumentCard:hover {
@@ -191,43 +192,43 @@
                     //    createInstruments(filterInstruments(filteredInstruments, filters))
                     //}
                 })
-        $('.addToCartBtn').on('click', (event) => {
-            debugger;
-            var target = event.target;
-            var instrumentId = target.getAttribute('instrumentId');
-            var cart = JSON.parse(sessionStorage.cart);
-            var exists = 0;
-            for (cartItem of cart) {
-                if (cartItem.id == instrumentId) {
-                    cartItem.quantity++;
-                    exists++;
+             $('.addToCartBtn').on('click', (event) => {
+                recommendationsIds = [];
+                var target = event.target;
+                var instrumentId = target.getAttribute('instrumentId');
+                var cart = JSON.parse(sessionStorage.cart);
+                var exists = 0;
+                for (cartItem of cart) {
+                    if (cartItem.id == instrumentId) {
+                        cartItem.quantity++;
+                        exists++;
+                    }
                 }
-            }
-            if (!exists) {
-                cart.push({ id: instrumentId, quantity: 1 })
-            }
-            var tempRecommendations = getRecommendation(`?instrumentId=${instrumentId}`).responseJSON;
-            var recommendations = JSON.parse(sessionStorage.recommendations);
-            recommendationsIds = [];
-            for (i = 0; i < recommendations.length; i++)
-                recommendationsIds[i] = recommendations[i]["id"];
-
-            var tempRecommendationsToAdd = [];
-
-            for (recommendation of tempRecommendations) {
-                if (!recommendationsIds.includes(recommendation["id"])) {
-                    tempRecommendationsToAdd.push(recommendation);
+                if (!exists) {
+                    cart.push({ id: instrumentId, quantity: 1 })
                 }
-            }
+                var tempRecommendations = getRecommendation(`?instrumentId=${instrumentId}`).responseJSON;
+                var recommendations = JSON.parse(sessionStorage.recommendations);
+            
+                for (i = 0; i < recommendations.length; i++)
+                    recommendationsIds[i] = recommendations[i]["id"];
 
-            recommendations = recommendations.concat(tempRecommendationsToAdd);
+                var tempRecommendationsToAdd = [];
 
-            sessionStorage.cart = JSON.stringify(cart);
-            alert("נוסף לעגלה")
-            sessionStorage.recommendations = JSON.stringify(recommendations);
-        });
+                for (recommendation of tempRecommendations) {
+                    if (!recommendationsIds.includes(recommendation["id"])) {
+                        tempRecommendationsToAdd.push(recommendation);
+                    }
+                }
 
-        });
+                recommendations = recommendations.concat(tempRecommendationsToAdd);
+
+                sessionStorage.cart = JSON.stringify(cart);
+                alert("נוסף לעגלה")
+                sessionStorage.recommendations = JSON.stringify(recommendations);
+            });
+
+            });
 
             $('#NameSearch').keyup((event) => {
                 //$("#instrumentList").empty();

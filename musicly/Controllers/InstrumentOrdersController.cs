@@ -20,7 +20,7 @@ namespace musicly.Controllers
     public class InstrumentOrdersController : Controller
     {
         private readonly musiclyContext _context;
-        private const int NUMBER_OF_RECOMMENDATION = 6;
+        private const int NUMBER_OF_RECOMMENDATION = 3;
         public InstrumentOrdersController(musiclyContext context)
         {
             _context = context;
