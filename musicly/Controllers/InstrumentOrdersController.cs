@@ -12,6 +12,7 @@ using Newtonsoft.Json.Linq;
 using System.Runtime.Serialization.Json;
 using System.IO;
 using System.Text;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace musicly.Controllers
 {
@@ -44,36 +45,40 @@ namespace musicly.Controllers
         //public IActionResult createOrder([FromBody]CartItem[] cartItems, [FromBody]DateTime date)
         public IActionResult createOrder(IEnumerable<CartItem> items)
         {
-            int? orderId = _context.Order.Max(order => order.Id);
-
-            if (orderId != null)
+            try
             {
+                if (items.Count() == 0)
+                    throw new Exception();
+
                 Order newOrder = new Order()
                 {
-                    Id = (int)orderId + 1,
+                    Id = 0,
                     OrderDate = DateTime.Now,
                     UserId = 1
                 };
 
                 _context.Add(newOrder);
                 _context.SaveChanges();
-
+                int orderId = _context.Order.Max(order => order.Id);
                 foreach (var cartItem in items)
                 {
                     var instrumentOrder = new InstrumentOrder()
                     {
                         InstrumentId = cartItem.Id,
                         Quantity = cartItem.Quantity,
-                        OrderId = (int)orderId + 1
+                        OrderId = (int)orderId
                     };
 
                     _context.Add(instrumentOrder);
                 }
-
-                _context.SaveChangesAsync();
+                _context.SaveChanges();
             }
-
-            return Ok();
+            catch
+            {
+                return BadRequest();
+            }
+        
+            return Ok();              
         }
 
         // GET: InstrumentOrdersController/Cart

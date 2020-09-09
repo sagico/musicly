@@ -63,21 +63,25 @@
         });
 
         $('#completeOrder').on('click', (event) => {
-
-        $.ajax({
-            url: "/Instruments/order",
-            type: "POST",
-            data: { items: JSON.parse(sessionStorage.cart) },
-            success: function (res, status, xhr) {
-                console.log("sa", res, status)
-            },
-            error: function (xhr, status, err) {
-                console.log("fail");
-                return [];
+            if (JSON.parse(sessionStorage["cart"]).length != 0) {
+                $.ajax({
+                    url: "/Instruments/order",
+                    type: "POST",
+                    data: { items: JSON.parse(sessionStorage.cart) },
+                    success: function (res, status, xhr) {
+                        alert("ההזמנה בוצעה");
+                        sessionStorage.cart = JSON.stringify([]);
+                        setTimeout(() => {
+                            window.location.href = "/Home";
+                        }, 2000)
+                    },
+                    error: function (xhr, status, err) {
+                        alert("שגיאה במהלך ההזמנה");
+                    }
+                });
+            } else {
+                alert("הוסף מוצרים לעגלה!");
             }
-        })
-
-            // TODO: send to controller api req
         });
 
     })
