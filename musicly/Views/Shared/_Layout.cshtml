@@ -129,20 +129,17 @@
             <ul class="navbar-nav ml-auto flex-nowrap">
                 @if (Context.Session.GetString("Admin") != null && Context.Session.GetInt32("Admin") == 1)
                 {
-                    <li class="nav-item" class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Statistics" asp-action="Index">סטטיסטיקות של קניות</a>
-                    </li>
-                    <li class="nav-item" class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Users" asp-action="Index">ניהול משתמשים</a>
-                    </li>
-                    <li class="nav-item" class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="InstrumentTypes" asp-action="Index">ניהול סוגי כלים</a>
-                    </li>
-                    <li class="nav-item" class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="InstrumentOrders" asp-action="Index">ניהול הזמנות</a>
-                    </li>
-                    <li class="nav-item" class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Instruments" asp-action="Index">ניהול כלי נגינה</a>
+                    <li class="nav-item dropdown" style="direction: rtl">
+                        <a class="nav-link dropdown-toggle" id="navbarDropdown" style="direction: rtl" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            ניהול
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="direction: rtl; text-align:right">
+                            <a class="dropdown-item" asp-area="" asp-controller="Statistics" asp-action="Index">סטטיסטיקות של קניות</a>
+                            <a class="dropdown-item" asp-area="" asp-controller="Users" asp-action="Index">ניהול משתמשים</a>
+                            <a class="dropdown-item" asp-area="" asp-controller="InstrumentTypes" asp-action="Index">ניהול סוגי כלים</a>
+                            <a class="dropdown-item" asp-area="" asp-controller="InstrumentOrders" asp-action="Index">ניהול הזמנות</a>
+                            <a class="dropdown-item" asp-area="" asp-controller="Instruments" asp-action="Index">ניהול כלי נגינה</a>
+                        </div>
                     </li>
                 }
 
