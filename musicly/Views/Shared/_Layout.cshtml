@@ -154,6 +154,9 @@
                     <li class="nav-item" class="nav-item">
                         <a class="nav-link" asp-area="" asp-controller="Instruments" asp-action="InstrumentsList">כלי נגינה</a>
                     </li>
+                    <li class="nav-item" class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Orders" asp-action="OrdersForUser">ההזמנות שלי</a>
+                    </li>
                 }
 
                 @if (Context.Session.GetString("UserName") == null)
