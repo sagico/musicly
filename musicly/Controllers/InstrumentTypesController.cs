@@ -35,6 +35,17 @@ namespace musicly.Controllers
             return View(await instrumentTypes.ToListAsync());
         }
 
+        [Route("Instruments/Types")]
+        public async Task<IActionResult> GetAllInstrumentTypes()
+        {
+            var instrumentTypes =  _context.InstrumentType.ToArray();
+            if (instrumentTypes == null)
+            {
+                return NotFound();
+            }
+            return Ok(instrumentTypes);
+        }
+
         // GET: InstrumentTypes/Details/5
         public async Task<IActionResult> Details(int? id)
         {
