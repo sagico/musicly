@@ -28,17 +28,28 @@ namespace musicly.Controllers
         {
             AdminAuthorization();
 
-            var fileName = Path.Combine(_hostingEnvironment.ContentRootPath + "\\images\\instruments", Path.GetFileName(file.FileName));
+            var fileName = Path.Combine(_hostingEnvironment.ContentRootPath + "./Views/Instruments/Images/", Path.GetFileName(file.FileName));
             int count = 0;
             while (System.IO.File.Exists(fileName))
             {
-                fileName = Path.Combine(_hostingEnvironment.ContentRootPath + "\\images\\instruments", count.ToString() + Path.GetFileName(file.FileName));
+                fileName = Path.Combine(_hostingEnvironment.ContentRootPath + "./Views/Instruments/Images/", count.ToString() + Path.GetFileName(file.FileName));
                 count++;
             }
-            instrument.ImagePath = "/images/apartments/" + count.ToString() + file.FileName;
+            if (count != 0)
+            {
+                count--;
+                instrument.ImagePath = count.ToString() + file.FileName;
+            }
+            else
+            {
+                instrument.ImagePath = file.FileName;
+            }
 
-            // If the file does not exist already creating it
-            file.CopyTo(new FileStream(fileName, FileMode.Create));
+            // Create the file
+            using (var stream = new FileStream(fileName, FileMode.Create))
+            {
+                file.CopyTo(stream);
+            }
         }
 
         // GET: instrumentImage

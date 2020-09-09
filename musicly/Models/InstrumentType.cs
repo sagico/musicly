@@ -11,6 +11,8 @@ namespace musicly.Models
         #region PROPS
         [Key]
         public int Id { get; set; }
+
+        [Required(AllowEmptyStrings = false)]
         public string Name { get; set; }
         #endregion
     }
