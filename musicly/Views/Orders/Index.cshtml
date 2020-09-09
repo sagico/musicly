@@ -9,7 +9,9 @@
     th{text-align:center;}
 </style>
 <h2 style="text-align:right">הזמנות</h2>
-
+<form asp-controller="Orders" asp-action="Index" method="get">
+    <input name="searchId" type="text" placeholder="מזהה הזמנה כאן" />
+</form>
 <table class="table">
     <thead>
         <tr>

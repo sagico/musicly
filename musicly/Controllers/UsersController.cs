@@ -23,10 +23,16 @@ namespace musicly.Controllers
         }
 
         // GET: Users
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString)
         {
             Authorize();
-            return View(await _context.User.ToListAsync());
+            var users = from i in _context.User select i;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                users = users.Where(u => u.UserName.Contains(searchString));
+            }
+            return View(await users.ToListAsync());
         }
 
         // GET: Users/Details/5

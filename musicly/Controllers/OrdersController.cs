@@ -21,13 +21,20 @@ namespace musicly.Controllers
         }
 
         // GET: Orders
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? searchId)
         {
             AdminAuthorization();
             var musiclyContext = _context.Order.Include(o => o.User)
                                                .Include(o => o.InstrumentOrders)
                                                     .ThenInclude(i => i.Instrument);
-            return View(await musiclyContext.ToListAsync());
+            var orders = from i in musiclyContext select i;
+
+            if (searchId != null)
+            {
+                orders = orders.Where(o => o.Id == searchId);
+            }
+             
+            return View(await orders.ToListAsync());
         }
 
         public async Task<IActionResult> OrdersForUser()
