@@ -70,6 +70,6 @@
     <a asp-action="Edit" asp-route-id="@Model.Id">עריכה</a>
     @if (Context.Session.GetString("Admin") != null && Context.Session.GetInt32("Admin") == 1)
     {
-        <a asp-action="Index">חזרה לרשימה |</a>
+        <a asp-action="Index">| חזרה לרשימה</a>
     }
     </div>

@@ -23,8 +23,10 @@ namespace musicly.Controllers
         // GET: Orders
         public async Task<IActionResult> Index()
         {
+            AdminAuthorization();
             var musiclyContext = _context.Order.Include(o => o.User)
-                                               .Include(o => o.InstrumentOrders);
+                                               .Include(o => o.InstrumentOrders)
+                                                    .ThenInclude(i => i.Instrument);
             return View(await musiclyContext.ToListAsync());
         }
 
@@ -41,6 +43,7 @@ namespace musicly.Controllers
         // GET: Orders/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            AdminAuthorization();
             if (id == null)
             {
                 return NotFound();
@@ -48,6 +51,8 @@ namespace musicly.Controllers
 
             var order = await _context.Order
                 .Include(o => o.User)
+                    .Include(o => o.InstrumentOrders)
+                            .ThenInclude(i => i.Instrument)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (order == null)
             {
@@ -57,86 +62,11 @@ namespace musicly.Controllers
             return View(order);
         }
 
-        // GET: Orders/Create
-        public IActionResult Create()
-        {
-            ViewData["UserId"] = new SelectList(_context.User, "Id", "Id");
-            return View();
-        }
-
-        // POST: Orders/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,OrderDate,UserId")] Order order)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(order);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["UserId"] = new SelectList(_context.User, "Id", "Id", order.UserId);
-            return View(order);
-        }
-
-        // GET: Orders/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var order = await _context.Order.FindAsync(id);
-            if (order == null)
-            {
-                return NotFound();
-            }
-            ViewData["UserId"] = new SelectList(_context.User, "Id", "Id", order.UserId);
-            return View(order);
-        }
-
-        // POST: Orders/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,OrderDate,UserId")] Order order)
-        {
-            if (id != order.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(order);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!OrderExists(order.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["UserId"] = new SelectList(_context.User, "Id", "Id", order.UserId);
-            return View(order);
-        }
-
+       
         // GET: Orders/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            AdminAuthorization();
             if (id == null)
             {
                 return NotFound();

@@ -4,21 +4,18 @@
     ViewData["Title"] = "Details";
 }
 
-<h2>Details</h2>
+<h2 style="text-align:right">פרטים</h2>
 
 <div>
-    <h4>InstrumentType</h4>
+    <h4 style="text-align:right">סוג כלי נגינה</h4>
     <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
+    <dl style="float:right" class="dl-horizontal">
         <dd>
             @Html.DisplayFor(model => model.Name)
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model.Id">ערוך</a> |
+    <a asp-action="Index">חזרה לרשימה</a>
 </div>

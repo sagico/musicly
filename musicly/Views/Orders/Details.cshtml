@@ -4,28 +4,47 @@
     ViewData["Title"] = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+    <style>
+        dt {
+            float: right !important;
+        }
 
-<h2>Details</h2>
+        dd {
+            text-align: right;
+        }
+    </style>
+<h2 style="text-align:right">פרטי הזמנה</h2>
 
 <div>
-    <h4>Order</h4>
+    <h4 style="text-align:right">@Html.DisplayFor(model => model.User.FirstName) ההזמנה של </h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.OrderDate)
+            תאריך ההזמנה
         </dt>
         <dd>
             @Html.DisplayFor(model => model.OrderDate)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.User)
+            מוצרים
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.User.Id)
+            <table style="border:1px solid black; text-align:center;float:right">
+                @foreach (var instrumentOrder in Model.InstrumentOrders)
+                {
+                    <tr style="border:1px solid black">
+                        <td>
+                            @Html.DisplayFor(modelItem => instrumentOrder.Quantity)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => instrumentOrder.Instrument.Name)
+                        </td>
+                    </tr>
+                }
+            </table>
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">חזרה לדף ההזמנות</a>
 </div>

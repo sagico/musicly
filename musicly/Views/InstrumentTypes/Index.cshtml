@@ -5,30 +5,30 @@
 }
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">צור חדש</a>
 </p>
 <form asp-controller="InstrumentTypes" asp-action="Index" method="get">
-    <input name="searchString" type="text" placeholder="instrument name here" />
+    <input name="searchString" type="text" placeholder="סוג כלי כאן" />
 </form>
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
             <th></th>
+            <th>
+                שם
+            </th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Name)
+                <a asp-action="Edit" asp-route-id="@item.Id">ערוך</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">פרטים</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">מחק</a>
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                @Html.DisplayFor(modelItem => item.Name)
             </td>
         </tr>
 }

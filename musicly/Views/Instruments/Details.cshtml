@@ -3,46 +3,54 @@
 @{
     ViewData["Title"] = "Details";
 }
+<style>
+    dt {
+        float: right !important;
+    }
 
-<h2>Details</h2>
+    dd {
+        text-align: right;
+    }
+</style>
+<h2 style="text-align:right">פרטים</h2>
 
 <div>
-    <h4>Instrument</h4>
+    <h4 style="text-align:right">כלי נגינה</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Name)
+            שם
         </dt>
         <dd>
             @Html.DisplayFor(model => model.Name)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Description)
+            מידע
         </dt>
         <dd>
             @Html.DisplayFor(model => model.Description)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Price)
+           מחיר
         </dt>
         <dd>
             @Html.DisplayFor(model => model.Price)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.ImagePath)
+            נתיב תמונה
         </dt>
         <dd>
             @Html.DisplayFor(model => model.ImagePath)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.InstrumentType)
+           סוג
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.InstrumentType.Id)
+            @Html.DisplayFor(model => model.InstrumentType.Name)
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model.Id">ערוך</a> |
+    <a asp-action="Index">חזרה לרשימה</a>
 </div>

@@ -48,7 +48,8 @@
                 });
             },
             error: function (e) {
-                alert("Could not query news")
+                console.log("לא ניתן למשוך מידע חדשות");
+                console.error(e);
             },
             async: true
         });
@@ -60,7 +61,7 @@
             padding-left: 15px;
         }
         body {
-            background-color: #4e41412e;
+            background-color: #4e414114;
         }
 
         #myNavbar {
@@ -72,6 +73,7 @@
         }
         body{
             font-family:'Segoe UI';
+            #4e414114
         }
         .greeting{
             color:white !important;
@@ -146,13 +148,13 @@
                 @if (Context.Session.GetString("UserName") != null)
                 {
                     <li class="nav-item" class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Orders" asp-action="OrdersForUser">ההזמנות שלי</a>
+                    </li>
+                    <li class="nav-item" class="nav-item">
                         <a class="nav-link" asp-area="" asp-controller="Users" asp-action="Details" asp-route-id=@Context.Session.GetInt32("UserId")>הפרטים שלי</a>
                     </li>
                     <li class="nav-item" class="nav-item">
                         <a class="nav-link" asp-area="" asp-controller="Instruments" asp-action="InstrumentsList">כלי נגינה</a>
-                    </li>
-                    <li class="nav-item" class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Orders" asp-action="OrdersForUser">ההזמנות שלי</a>
                     </li>
                 }
 
