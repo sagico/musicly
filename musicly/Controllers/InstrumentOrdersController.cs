@@ -44,7 +44,7 @@ namespace musicly.Controllers
         //public IActionResult createOrder([FromBody]CartItem[] cartItems, [FromBody]DateTime date)
         public IActionResult createOrder(IEnumerable<CartItem> items)
         {
-            int? orderId = _context.Orders.Max(order => order.Id);
+            int? orderId = _context.Order.Max(order => order.Id);
 
             if (orderId != null)
             {

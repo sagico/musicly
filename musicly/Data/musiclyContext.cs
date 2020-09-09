@@ -22,8 +22,8 @@ namespace musicly.Data
 
         public DbSet<musicly.Models.InstrumentOrder> InstrumentOrder { get; set; }
 
-        public DbSet<musicly.Models.Order> Orders { get; set; }
-
         public DbSet<musicly.Models.Store> Store { get; set; }
+
+        public DbSet<musicly.Models.Order> Order { get; set; }
     }
 }
