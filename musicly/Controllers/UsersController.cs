@@ -74,7 +74,7 @@ namespace musicly.Controllers
         public async Task<IActionResult> Create([Bind("Id,UserName,Password,FirstName,LastName,BirthDate,City,IsAdmin")] User user)
         {
             Authorize();
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && _context.User.Where(usert=> usert.UserName == user.UserName) == null)
             {                
                 _context.Add(user);
                 await _context.SaveChangesAsync();
