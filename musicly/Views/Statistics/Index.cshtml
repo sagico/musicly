@@ -4,19 +4,19 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>נתוני סטטיסטיקה</h2>
+<h2 style="text-align:right">נתוני סטטיסטיקה</h2>
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://d3js.org/d3.v6.min.js"></script>
 
-<div class="col-sm-6" style="display:flex">
-    <div>
-        <h4>מחיר ממוצע לכל סוג של כלי נגינה</h4>
+<div class="row" style="display:flex">
+    <div  class="col-sm">
+        <h4 style="text-align:center">מחיר ממוצע לכל סוג של כלי נגינה</h4>
         <div id="typeAveragePriceChartContainer" style="width:400px; height:200px"></div>
     </div>
 
-    <div>
-        <h4>כמות הכלים מכל סוג</h4>
+    <div class="col-sm">
+        <h4 style="text-align:center">כמות הכלים מכל סוג</h4>
         <div id="typeCountChartContainer" style="width:400px; height:200px"></div>
     </div>
 </div>
