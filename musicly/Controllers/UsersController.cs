@@ -62,7 +62,6 @@ namespace musicly.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize]
         public async Task<IActionResult> Create([Bind("Id,UserName,Password,FirstName,LastName,BirthDate,City,IsAdmin")] User user)
         {
             Authorize();
