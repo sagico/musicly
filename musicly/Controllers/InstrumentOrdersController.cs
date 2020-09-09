@@ -54,7 +54,7 @@ namespace musicly.Controllers
                 {
                     Id = 0,
                     OrderDate = DateTime.Now,
-                    UserId = 1
+                    UserId = (int)HttpContext.Session.GetInt32("UserId")
                 };
 
                 _context.Add(newOrder);

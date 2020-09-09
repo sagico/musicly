@@ -251,8 +251,8 @@ namespace musicly.Controllers
 
         private void UserAuthorization()
         {
-            //if (HttpContext.Session.GetInt32("UserId") == null)
-              //  throw new UnauthorizedAccessException();
+            if (HttpContext.Session.GetInt32("UserId") == null)
+                throw new UnauthorizedAccessException();
         }
     }
 }
