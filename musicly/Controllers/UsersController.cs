@@ -142,7 +142,9 @@ namespace musicly.Controllers
         // GET: Users/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            Authorize(); 
+            Authorize();
+            if (HttpContext.Session.GetInt32("UserId") == id)
+                throw new UnauthorizedAccessException();
 
             if (id == null)
             {
@@ -165,6 +167,9 @@ namespace musicly.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             Authorize();
+            if (HttpContext.Session.GetInt32("UserId") == id)
+                throw new UnauthorizedAccessException();
+
             var user = await _context.User.FindAsync(id);
             _context.User.Remove(user);
             await _context.SaveChangesAsync();
@@ -173,7 +178,6 @@ namespace musicly.Controllers
 
         private bool UserExists(int id)
         {
-            Authorize();
             return _context.User.Any(e => e.Id == id);
         }
 

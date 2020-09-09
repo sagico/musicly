@@ -38,6 +38,7 @@ namespace musicly.Controllers
         [Route("Instruments/Types")]
         public async Task<IActionResult> GetAllInstrumentTypes()
         {
+            UserAuthorization();
             var instrumentTypes =  _context.InstrumentType.ToArray();
             if (instrumentTypes == null)
             {
@@ -69,6 +70,7 @@ namespace musicly.Controllers
         // GET: InstrumentTypes/Create
         public IActionResult Create()
         {
+            AdminAuthorization();
             return View();
         }
 
@@ -180,8 +182,6 @@ namespace musicly.Controllers
 
         private bool InstrumentTypeExists(int id)
         {
-            UserAuthorization();
-
             return _context.InstrumentType.Any(e => e.Id == id);
         }
 

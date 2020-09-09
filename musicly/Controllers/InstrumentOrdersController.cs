@@ -29,6 +29,7 @@ namespace musicly.Controllers
         // GET: InstrumentOrders
         public async Task<IActionResult> Index(int? searchId)
         {
+            AdminAuthorization();
             var musiclyContext = _context.InstrumentOrder.Include(i => i.Instrument).Include(i => i.Order);
             var orders = from i in musiclyContext select i;
 
@@ -44,6 +45,8 @@ namespace musicly.Controllers
         [Route("Recommendations")]
         public IActionResult GetRecommendationByInstrument(int? instrumentId)
         {
+            UserAuthorization();
+
             int count = 0;
             var recommendations = new List<Instrument>();
             var instrumentOrders = _context.InstrumentOrder.Include(i=>i.Order).Include(i=>i.Instrument).ToList();
@@ -83,6 +86,7 @@ namespace musicly.Controllers
         [HttpPost]
         public IActionResult createOrder(IEnumerable<CartItem> items)
         {
+            UserAuthorization();
             try
             {
                 if (items.Count() == 0)
@@ -123,12 +127,14 @@ namespace musicly.Controllers
         [Route("InstrumentOrdersController/Cart")]
         public async Task<IActionResult> Cart(int? searchId)
         {
+            UserAuthorization();
             return View();
         }
 
         // GET: InstrumentOrders/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            AdminAuthorization();
             if (id == null)
             {
                 return NotFound();
@@ -149,6 +155,7 @@ namespace musicly.Controllers
         // GET: InstrumentOrders/Create
         public IActionResult Create()
         {
+            AdminAuthorization();
             ViewData["InstrumentId"] = new SelectList(_context.Set<Instrument>(), "Id", "Id");
             ViewData["OrderId"] = new SelectList(_context.Set<Order>(), "Id", "Id");
             return View();
@@ -161,6 +168,8 @@ namespace musicly.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("InstrumentOrderID,OrderId,InstrumentId,Quantity")] InstrumentOrder instrumentOrder)
         {
+            AdminAuthorization();
+
             if (ModelState.IsValid)
             {
                 _context.Add(instrumentOrder);
@@ -175,6 +184,7 @@ namespace musicly.Controllers
         // GET: InstrumentOrders/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            AdminAuthorization();
             if (id == null)
             {
                 return NotFound();
@@ -197,6 +207,8 @@ namespace musicly.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("InstrumentOrderID,OrderId,InstrumentId,Quantity")] InstrumentOrder instrumentOrder)
         {
+            AdminAuthorization();
+
             if (id != instrumentOrder.InstrumentOrderID)
             {
                 return NotFound();
@@ -230,6 +242,7 @@ namespace musicly.Controllers
         // GET: InstrumentOrders/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            AdminAuthorization();
             if (id == null)
             {
                 return NotFound();
@@ -252,6 +265,7 @@ namespace musicly.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            AdminAuthorization();
             var instrumentOrder = await _context.InstrumentOrder.FindAsync(id);
             _context.InstrumentOrder.Remove(instrumentOrder);
             await _context.SaveChangesAsync();
@@ -261,6 +275,18 @@ namespace musicly.Controllers
         private bool InstrumentOrderExists(int id)
         {
             return _context.InstrumentOrder.Any(e => e.InstrumentOrderID == id);
+        }
+
+        private void AdminAuthorization()
+        {
+            if (HttpContext.Session.GetInt32("Admin") == null)
+                throw new UnauthorizedAccessException();
+        }
+
+        private void UserAuthorization()
+        {
+            if (HttpContext.Session.GetInt32("UserId") == null)
+                throw new UnauthorizedAccessException();
         }
     }
 }

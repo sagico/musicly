@@ -24,6 +24,7 @@ namespace musicly.Controllers
         [HttpGet("types/prices")]
         public JsonResult TypesAveragePrices()
         {
+            Authorize();
             var data = _context.Instrument.GroupBy(p => p.InstrumentType.Name).
                 Select(a => new { name = a.Key, value = a.Average(p => p.Price)}).
                 OrderBy(a => a.value).
@@ -34,10 +35,17 @@ namespace musicly.Controllers
         [HttpGet("types/count")]
         public JsonResult TypesAmount()
         {
+            Authorize();
             var data = _context.Instrument.GroupBy(p => p.InstrumentType.Name).
                 Select(a => new { name = a.Key, value = a.Count() }).                
                 ToArray();
             return Json(JsonConvert.SerializeObject(data));
+        }
+
+        private void Authorize()
+        {
+            if (HttpContext.Session.GetInt32("Admin") == null)
+                throw new UnauthorizedAccessException();
         }
     }
 }
