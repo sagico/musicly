@@ -160,7 +160,7 @@ namespace musicly.Controllers
             {
                 return NotFound();
             }
-            ViewData["TypeID"] = new SelectList(_context.InstrumentType, "Id", "Id", instrument.TypeID);
+            ViewData["TypeID"] = new SelectList(_context.InstrumentType, "Id", "Name", instrument.TypeID);
             return View(instrument);
         }
 
