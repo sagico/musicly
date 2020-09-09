@@ -1,65 +1,77 @@
-﻿@model musicly.Models.User
+﻿@using Microsoft.AspNetCore.Http
+@model musicly.Models.User
 
 @{
     ViewData["Title"] = "Edit";
 }
 
-<h2>Edit</h2>
+<style>
+    input {
+        text-align: center;
+    }
+</style>
 
-<h4>User</h4>
+<h2 style="text-align:right">עריכה</h2>
+
+<h4 style="text-align:right">משתמש</h4>
 <hr />
-<div class="row">
+<div class="row" style="justify-content:center">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="Edit" style="text-align:right">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
-                <label asp-for="UserName" class="control-label"></label>
+                <label asp-for="UserName" class="control-label">שם משתמש</label>
                 <input asp-for="UserName" class="form-control" />
                 <span asp-validation-for="UserName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Password" class="control-label"></label>
+                <label asp-for="Password" class="control-label">סיסמא</label>
                 <input asp-for="Password" type="password" class="form-control" />
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="FirstName" class="control-label"></label>
+                <label asp-for="FirstName" class="control-label">שם פרטי</label>
                 <input asp-for="FirstName" class="form-control" />
                 <span asp-validation-for="FirstName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="LastName" class="control-label"></label>
+                <label asp-for="LastName" class="control-label">שם משפחה</label>
                 <input asp-for="LastName" class="form-control" />
                 <span asp-validation-for="LastName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="BirthDate" class="control-label"></label>
+                <label asp-for="BirthDate" class="control-label">תאריך לידה</label>
                 <input asp-for="BirthDate" class="form-control" />
                 <span asp-validation-for="BirthDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="City" class="control-label"></label>
+                <label asp-for="City" class="control-label">עיר</label>
                 <input asp-for="City" class="form-control" />
                 <span asp-validation-for="City" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <div class="checkbox">
-                    <label>
-                        <input asp-for="IsAdmin" /> @Html.DisplayNameFor(model => model.IsAdmin)
-                    </label>
+            @if (Context.Session.GetString("Admin") != null && Context.Session.GetInt32("Admin") == 1)
+            {
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label>
+                            <input asp-for="IsAdmin" /> @Html.DisplayNameFor(model => model.IsAdmin)
+                        </label>
+                    </div>
                 </div>
-            </div>
+            }
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-default" />
+                <input type="submit" value="שמור" style="width:100%" class="btn btn-default" />
             </div>
         </form>
     </div>
 </div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+@if (Context.Session.GetString("Admin") != null && Context.Session.GetInt32("Admin") == 1)
+{
+    <div>
+        <a asp-action="Index">חזרה לרשימה</a>
+    </div>
+}
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

@@ -39,7 +39,6 @@
             type: "GET",
             headers: { 'Access-Control-Allow-Origin': '*' },
             success: function (r) {
-                console.log("asdasd")
                 $.each(r.articles, function (i, item) {
 
                     var sign = document.createElement("span");
@@ -129,6 +128,9 @@
                 @if (Context.Session.GetString("Admin") != null && Context.Session.GetInt32("Admin") == 1)
                 {
                     <li class="nav-item" class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Statistics" asp-action="Index">סטטיסטיקות של קניות</a>
+                    </li>
+                    <li class="nav-item" class="nav-item">
                         <a class="nav-link" asp-area="" asp-controller="Users" asp-action="Index">ניהול משתמשים</a>
                     </li>
                     <li class="nav-item" class="nav-item">
@@ -144,6 +146,9 @@
 
                 @if (Context.Session.GetString("UserName") != null)
                 {
+                    <li class="nav-item" class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Users" asp-action="Details" asp-route-id=@Context.Session.GetInt32("UserId")>הפרטים שלי</a>
+                    </li>
                     <li class="nav-item" class="nav-item">
                         <a class="nav-link" asp-area="" asp-controller="Instruments" asp-action="InstrumentsList">כלי נגינה</a>
                     </li>

@@ -32,12 +32,15 @@ namespace musicly.Controllers
         // GET: Users/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            Authorize();
+            AuthorizeUser();
 
             if (id == null)
             {
                 return NotFound();
             }
+
+            if (HttpContext.Session.GetInt32("UserId") != id && HttpContext.Session.GetInt32("Admin") == null)
+                throw new UnauthorizedAccessException();
 
             var user = await _context.User
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -77,7 +80,7 @@ namespace musicly.Controllers
         // GET: Users/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            Authorize();
+            AuthorizeUser();
            
             if (id == null)
             {
@@ -99,7 +102,10 @@ namespace musicly.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,UserName,Password,FirstName,LastName,BirthDate,City,IsAdmin")] User user)
         {
-            Authorize();
+            AuthorizeUser();
+
+            if (HttpContext.Session.GetInt32("UserId") != id && HttpContext.Session.GetInt32("Admin") == null)
+                throw new UnauthorizedAccessException();
 
             if (id != user.Id)
             {
@@ -124,7 +130,11 @@ namespace musicly.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+
+                if (HttpContext.Session.GetInt32("UserId") == id)
+                    return Redirect("/home");
+                else
+                    return RedirectToAction(nameof(Index));
             }
             return View(user);
         }
@@ -170,6 +180,12 @@ namespace musicly.Controllers
         private void Authorize()
         {
             if (HttpContext.Session.GetInt32("Admin") == null)
+                throw new UnauthorizedAccessException();
+        }
+
+        private void AuthorizeUser()
+        {
+            if (HttpContext.Session.GetInt32("UserId") == null)
                 throw new UnauthorizedAccessException();
         }
     }
