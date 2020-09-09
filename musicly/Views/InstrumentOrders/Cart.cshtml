@@ -63,29 +63,20 @@
         });
 
         $('#completeOrder').on('click', (event) => {
-            var finalCart = {
-                //items: JSON.parse(sessionStorage.cart),
-                //date: new Date().toISOString()
-                date:"test"
-            };
 
-            $.ajax({
-                url: "/Instruments/order",
-                method: "POST",
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                dataType: "json",
-                data: finalCart,
-                success: function (res, status, xhr) {
-                    console.log("sa", res, status)
-                },
-                error: function (xhr, status, err) {
-                    console.log("fail");
-                    return [];
-                }
-            })
+        $.ajax({
+            url: "/Instruments/order",
+            type: "POST",
+            data: { items: JSON.parse(sessionStorage.cart) },
+            success: function (res, status, xhr) {
+                console.log("sa", res, status)
+            },
+            error: function (xhr, status, err) {
+                console.log("fail");
+                return [];
+            }
+        })
+
             // TODO: send to controller api req
         });
 

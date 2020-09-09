@@ -8,6 +8,10 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using musicly.Data;
 using musicly.Models;
+using Newtonsoft.Json.Linq;
+using System.Runtime.Serialization.Json;
+using System.IO;
+using System.Text;
 
 namespace musicly.Controllers
 {
@@ -37,25 +41,37 @@ namespace musicly.Controllers
         // POST: Instruments/order
         [Route("Instruments/order")]
         [HttpPost]
-        public IActionResult createOrder([FromBody]CartItem[] cartItems, [FromBody]DateTime date)
+        //public IActionResult createOrder([FromBody]CartItem[] cartItems, [FromBody]DateTime date)
+        public IActionResult createOrder(IEnumerable<CartItem> items)
         {
-            Order order = new Order();
-            order.OrderDate = date;
-            order.UserId = (int)HttpContext.Session.GetInt32("UserId");
-            // save order
+            int? orderId = _context.Orders.Max(order => order.Id);
 
-
-            foreach (CartItem cartItem in cartItems)
+            if (orderId != null)
             {
-                InstrumentOrder io = new InstrumentOrder();
-                io.InstrumentId = cartItem.instrumentId;
-                io.Quantity = cartItem.quantity;
-                io.OrderId = order.Id;
+                Order newOrder = new Order()
+                {
+                    Id = (int)orderId + 1,
+                    OrderDate = DateTime.Now,
+                    UserId = 1
+                };
 
+                _context.Add(newOrder);
+                _context.SaveChanges();
+
+                foreach (var cartItem in items)
+                {
+                    var instrumentOrder = new InstrumentOrder()
+                    {
+                        InstrumentId = cartItem.Id,
+                        Quantity = cartItem.Quantity,
+                        OrderId = (int)orderId + 1
+                    };
+
+                    _context.Add(instrumentOrder);
+                }
+
+                _context.SaveChangesAsync();
             }
-
-
-
 
             return Ok();
         }
