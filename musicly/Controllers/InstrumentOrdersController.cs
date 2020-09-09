@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -19,7 +20,7 @@ namespace musicly.Controllers
     public class InstrumentOrdersController : Controller
     {
         private readonly musiclyContext _context;
-
+        private const int NUMBER_OF_RECOMMENDATION = 6;
         public InstrumentOrdersController(musiclyContext context)
         {
             _context = context;
@@ -39,10 +40,47 @@ namespace musicly.Controllers
             return View(await orders.ToListAsync());
         }
 
+        // GET: Recommendation
+        [Route("Recommendations")]
+        public IActionResult GetRecommendationByInstrument(int? instrumentId)
+        {
+            int count = 0;
+            var recommendations = new List<Instrument>();
+            var instrumentOrders = _context.InstrumentOrder.Include(i=>i.Order).Include(i=>i.Instrument).ToList();
+            var orderIdList = new List<int>();
+            
+            if (instrumentId == null)
+            {
+                var baseUser = _context.User.FirstOrDefault(m => m.Id == HttpContext.Session.GetInt32("UserId"));
+                DateTime fiveYearsBefore = baseUser.BirthDate.AddYears(-5), fiveYearsLater = baseUser.BirthDate.AddYears(5);
+
+                var usersInAge = _context.User.ToList().Where(tempUser =>
+                                            (tempUser.BirthDate >= fiveYearsBefore && tempUser.BirthDate <= fiveYearsLater)).Select(user => user.Id).ToList();
+                orderIdList = instrumentOrders.Where(index => usersInAge.Contains(index.Order.UserId)).Select(order => order.OrderId).ToList();
+            } 
+            else
+            {
+                orderIdList = instrumentOrders.Where(i => i.InstrumentId == instrumentId).Select(i => i.OrderId).ToList();
+            }
+
+            orderIdList = orderIdList.Distinct().ToList();
+
+            foreach (var instrumentOrder in instrumentOrders.OrderBy(order=> order.Quantity))
+            {
+                if (orderIdList.Contains(instrumentOrder.OrderId) && !recommendations.Contains(instrumentOrder.Instrument))
+                {
+                    recommendations.Add(instrumentOrder.Instrument);
+                    if (++count == NUMBER_OF_RECOMMENDATION)
+                        break;
+                }               
+            }
+
+            return Ok(recommendations.Select(i=>new { i.Id, i.ImagePath, i.Name, i.Price}));
+        }
+
         // POST: Instruments/order
         [Route("Instruments/order")]
         [HttpPost]
-        //public IActionResult createOrder([FromBody]CartItem[] cartItems, [FromBody]DateTime date)
         public IActionResult createOrder(IEnumerable<CartItem> items)
         {
             try
